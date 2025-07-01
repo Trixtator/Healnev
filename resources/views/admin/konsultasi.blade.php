@@ -1,9 +1,1560 @@
 @extends('layouts.loglayout')
 
-@section('title', 'Jadwal Konsultasi')
+@section('title', 'Jadwal Konsultasi - HealthNav Admin')
 
 @section('content')
-<h1>Jadwal Konsultasi</h1>
-<p>Ini halaman Jadwal Konsultasi.</p>
-<!-- Tambahkan konten jadwal konsultasi -->
+<!-- Enhanced Consultation Schedule Page -->
+<div class="admin-wrapper">
+    <div class="admin-background">
+        <div class="admin-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+    </div>
+
+    <div class="admin-container">
+        <!-- Page Header -->
+        <div class="page-header" data-aos="fade-down">
+            <div class="header-content">
+                <div class="header-info">
+                    <h1 class="page-title">
+                        <i class="fas fa-calendar-alt me-3"></i>
+                        Jadwal Konsultasi
+                    </h1>
+                    <p class="page-subtitle">Kelola jadwal konsultasi dokter dan pasien</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-primary" id="addScheduleBtn">
+                        <i class="fas fa-plus me-2"></i>
+                        Tambah Jadwal
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid" data-aos="fade-up" data-aos-delay="100">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number">24</h3>
+                    <p class="stat-label">Jadwal Hari Ini</p>
+                </div>
+                <div class="stat-trend">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+15%</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon success">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number">12</h3>
+                    <p class="stat-label">Dokter Aktif</p>
+                </div>
+                <div class="stat-trend success">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+8%</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon warning">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number">6</h3>
+                    <p class="stat-label">Menunggu Konfirmasi</p>
+                </div>
+                <div class="stat-trend warning">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>-3%</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon info">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number">18</h3>
+                    <p class="stat-label">Selesai Hari Ini</p>
+                </div>
+                <div class="stat-trend info">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+12%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar and Filter Section -->
+        <div class="calendar-section" data-aos="fade-up" data-aos-delay="200">
+            <div class="calendar-card">
+                <div class="calendar-header">
+                    <h3 class="calendar-title">
+                        <i class="fas fa-calendar me-2"></i>
+                        Kalender Konsultasi
+                    </h3>
+                    <div class="calendar-controls">
+                        <div class="date-navigation">
+                            <button class="nav-btn" id="prevMonth">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <span class="current-month" id="currentMonth">November 2024</span>
+                            <button class="nav-btn" id="nextMonth">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="month">Bulan</button>
+                            <button class="view-btn" data-view="week">Minggu</button>
+                            <button class="view-btn" data-view="day">Hari</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calendar-content">
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Calendar will be generated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule List Section -->
+        <div class="schedule-section" data-aos="fade-up" data-aos-delay="300">
+            <div class="schedule-card">
+                <div class="schedule-header">
+                    <div class="schedule-title-section">
+                        <h3 class="schedule-title">
+                            <i class="fas fa-list me-2"></i>
+                            Daftar Jadwal Konsultasi
+                        </h3>
+                        <p class="schedule-subtitle">Kelola semua jadwal konsultasi</p>
+                    </div>
+                    <div class="schedule-filters">
+                        <select class="filter-select" id="doctorFilter">
+                            <option value="">Semua Dokter</option>
+                            <option value="dr-smith">Dr. Smith</option>
+                            <option value="dr-johnson">Dr. Johnson</option>
+                            <option value="dr-williams">Dr. Williams</option>
+                        </select>
+                        <select class="filter-select" id="statusFilter">
+                            <option value="">Semua Status</option>
+                            <option value="scheduled">Terjadwal</option>
+                            <option value="confirmed">Dikonfirmasi</option>
+                            <option value="completed">Selesai</option>
+                            <option value="cancelled">Dibatalkan</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="schedule-list">
+                    <!-- Sample Schedule Items -->
+                    <div class="schedule-item" data-aos="fade-up" data-aos-delay="100">
+                        <div class="schedule-time">
+                            <div class="time-badge">
+                                <i class="fas fa-clock me-1"></i>
+                                09:00
+                            </div>
+                            <div class="date-info">18 Nov 2024</div>
+                        </div>
+                        <div class="schedule-details">
+                            <div class="patient-info">
+                                <div class="patient-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="patient-details">
+                                    <h4 class="patient-name">John Doe</h4>
+                                    <p class="patient-email">john.doe@email.com</p>
+                                    <p class="consultation-type">
+                                        <i class="fas fa-stethoscope me-1"></i>
+                                        Konsultasi Umum
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="schedule-doctor">
+                            <div class="doctor-info">
+                                <div class="doctor-avatar">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <div class="doctor-details">
+                                    <h5 class="doctor-name">Dr. Smith</h5>
+                                    <p class="doctor-specialty">Dokter Umum</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="schedule-status">
+                            <span class="status-badge status-confirmed">
+                                <i class="fas fa-check-circle me-1"></i>
+                                Dikonfirmasi
+                            </span>
+                        </div>
+                        <div class="schedule-actions">
+                            <button class="action-btn view-btn" title="Lihat Detail">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="Edit Jadwal">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete-btn" title="Hapus Jadwal">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="schedule-item" data-aos="fade-up" data-aos-delay="150">
+                        <div class="schedule-time">
+                            <div class="time-badge">
+                                <i class="fas fa-clock me-1"></i>
+                                10:30
+                            </div>
+                            <div class="date-info">18 Nov 2024</div>
+                        </div>
+                        <div class="schedule-details">
+                            <div class="patient-info">
+                                <div class="patient-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="patient-details">
+                                    <h4 class="patient-name">Jane Smith</h4>
+                                    <p class="patient-email">jane.smith@email.com</p>
+                                    <p class="consultation-type">
+                                        <i class="fas fa-heart me-1"></i>
+                                        Konsultasi Jantung
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="schedule-doctor">
+                            <div class="doctor-info">
+                                <div class="doctor-avatar">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <div class="doctor-details">
+                                    <h5 class="doctor-name">Dr. Johnson</h5>
+                                    <p class="doctor-specialty">Kardiologi</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="schedule-status">
+                            <span class="status-badge status-scheduled">
+                                <i class="fas fa-calendar me-1"></i>
+                                Terjadwal
+                            </span>
+                        </div>
+                        <div class="schedule-actions">
+                            <button class="action-btn view-btn" title="Lihat Detail">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="Edit Jadwal">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete-btn" title="Hapus Jadwal">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="schedule-item" data-aos="fade-up" data-aos-delay="200">
+                        <div class="schedule-time">
+                            <div class="time-badge">
+                                <i class="fas fa-clock me-1"></i>
+                                14:00
+                            </div>
+                            <div class="date-info">18 Nov 2024</div>
+                        </div>
+                        <div class="schedule-details">
+                            <div class="patient-info">
+                                <div class="patient-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="patient-details">
+                                    <h4 class="patient-name">Michael Brown</h4>
+                                    <p class="patient-email">michael.brown@email.com</p>
+                                    <p class="consultation-type">
+                                        <i class="fas fa-brain me-1"></i>
+                                        Konsultasi Neurologi
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="schedule-doctor">
+                            <div class="doctor-info">
+                                <div class="doctor-avatar">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <div class="doctor-details">
+                                    <h5 class="doctor-name">Dr. Williams</h5>
+                                    <p class="doctor-specialty">Neurologi</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="schedule-status">
+                            <span class="status-badge status-completed">
+                                <i class="fas fa-check-double me-1"></i>
+                                Selesai
+                            </span>
+                        </div>
+                        <div class="schedule-actions">
+                            <button class="action-btn view-btn" title="Lihat Detail">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="Edit Jadwal">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete-btn" title="Hapus Jadwal">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Schedule Modal -->
+<div id="addScheduleModal" class="modal-overlay">
+    <div class="modal-container" data-aos="zoom-in">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-plus me-2"></i>
+                Tambah Jadwal Konsultasi
+            </h3>
+            <button type="button" class="modal-close" id="closeModalBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <form id="addScheduleForm" class="schedule-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="patientName" class="form-label">
+                            <i class="fas fa-user me-2"></i>
+                            Nama Pasien
+                        </label>
+                        <input type="text" id="patientName" name="patient_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="patientEmail" class="form-label">
+                            <i class="fas fa-envelope me-2"></i>
+                            Email Pasien
+                        </label>
+                        <input type="email" id="patientEmail" name="patient_email" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="doctorSelect" class="form-label">
+                            <i class="fas fa-user-md me-2"></i>
+                            Pilih Dokter
+                        </label>
+                        <select id="doctorSelect" name="doctor_id" class="form-control" required>
+                            <option value="">Pilih Dokter</option>
+                            <option value="1">Dr. Smith - Dokter Umum</option>
+                            <option value="2">Dr. Johnson - Kardiologi</option>
+                            <option value="3">Dr. Williams - Neurologi</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="consultationType" class="form-label">
+                            <i class="fas fa-stethoscope me-2"></i>
+                            Jenis Konsultasi
+                        </label>
+                        <select id="consultationType" name="consultation_type" class="form-control" required>
+                            <option value="">Pilih Jenis</option>
+                            <option value="general">Konsultasi Umum</option>
+                            <option value="cardiology">Konsultasi Jantung</option>
+                            <option value="neurology">Konsultasi Neurologi</option>
+                            <option value="orthopedic">Konsultasi Ortopedi</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="scheduleDate" class="form-label">
+                            <i class="fas fa-calendar me-2"></i>
+                            Tanggal
+                        </label>
+                        <input type="date" id="scheduleDate" name="schedule_date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="scheduleTime" class="form-label">
+                            <i class="fas fa-clock me-2"></i>
+                            Waktu
+                        </label>
+                        <input type="time" id="scheduleTime" name="schedule_time" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes" class="form-label">
+                        <i class="fas fa-notes-medical me-2"></i>
+                        Catatan (Opsional)
+                    </label>
+                    <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Tambahkan catatan khusus..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save me-2"></i>
+                        Simpan Jadwal
+                    </button>
+                    <button type="button" class="btn-secondary" id="cancelBtn">
+                        <i class="fas fa-times me-2"></i>
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Styles -->
+<style>
+    /* Include all previous admin styles and add specific consultation styles */
+    :root {
+        --primary-color: #3498db;
+        --primary-dark: #2980b9;
+        --primary-light: #5dade2;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+        --info-color: #17a2b8;
+        --dark-color: #2c3e50;
+        --light-color: #ecf0f1;
+        --white: #ffffff;
+        --gray-100: #f8f9fa;
+        --gray-200: #e9ecef;
+        --gray-300: #dee2e6;
+        --gray-400: #ced4da;
+        --gray-500: #adb5bd;
+        --gray-600: #6c757d;
+        --gray-700: #495057;
+        --gray-800: #343a40;
+        --gray-900: #212529;
+        --gradient-primary: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        --gradient-success: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        --gradient-warning: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        --gradient-danger: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        --gradient-info: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.08);
+        --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.12);
+        --shadow-lg: 0 15px 50px rgba(0, 0, 0, 0.15);
+        --border-radius: 12px;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --sidebar-width: 140px;
+    }
+
+    /* Base Styles */
+    body {
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: var(--dark-color);
+        background: var(--gray-100);
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Admin Wrapper */
+    .admin-wrapper {
+        min-height: 100vh;
+        position: relative;
+    }
+
+    .admin-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        z-index: -2;
+    }
+
+    .admin-shapes {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: -1;
+    }
+
+    .shape {
+        position: absolute;
+        background: rgba(52, 152, 219, 0.05);
+        border-radius: 50%;
+        animation: float 8s ease-in-out infinite;
+    }
+
+    .shape-1 {
+        width: 200px;
+        height: 200px;
+        top: 10%;
+        right: 10%;
+        animation-delay: 0s;
+    }
+
+    .shape-2 {
+        width: 150px;
+        height: 150px;
+        bottom: 20%;
+        left: 5%;
+        animation-delay: 3s;
+    }
+
+    .shape-3 {
+        width: 100px;
+        height: 100px;
+        top: 60%;
+        right: 30%;
+        animation-delay: 6s;
+    }
+
+    .admin-container {
+        margin-left: var(--sidebar-width);
+        padding: 30px;
+        min-height: 100vh;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Page Header */
+    .page-header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: var(--shadow-md);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--dark-color);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .page-subtitle {
+        color: var(--gray-600);
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .btn-primary {
+        background: var(--gradient-primary);
+        color: var(--white);
+        border: none;
+        padding: 12px 25px;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    /* Statistics Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: var(--shadow-md);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gradient-primary);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .stat-icon {
+        width: 70px;
+        height: 70px;
+        background: var(--gradient-primary);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-size: 1.8rem;
+        flex-shrink: 0;
+    }
+
+    .stat-icon.success {
+        background: var(--gradient-success);
+    }
+
+    .stat-icon.warning {
+        background: var(--gradient-warning);
+    }
+
+    .stat-icon.info {
+        background: var(--gradient-info);
+    }
+
+    .stat-content {
+        flex: 1;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--dark-color);
+        line-height: 1;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        color: var(--gray-600);
+        font-size: 1rem;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .stat-trend {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    .stat-trend.success {
+        color: var(--success-color);
+    }
+
+    .stat-trend.warning {
+        color: var(--warning-color);
+    }
+
+    .stat-trend.info {
+        color: var(--info-color);
+    }
+
+    /* Calendar Section */
+    .calendar-section {
+        margin-bottom: 30px;
+    }
+
+    .calendar-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        box-shadow: var(--shadow-md);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        overflow: hidden;
+    }
+
+    .calendar-header {
+        padding: 30px;
+        border-bottom: 2px solid var(--gray-200);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .calendar-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark-color);
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .calendar-controls {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .date-navigation {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .nav-btn {
+        width: 40px;
+        height: 40px;
+        background: var(--gray-200);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nav-btn:hover {
+        background: var(--primary-color);
+        color: var(--white);
+    }
+
+    .current-month {
+        font-weight: 600;
+        color: var(--dark-color);
+        min-width: 150px;
+        text-align: center;
+    }
+
+    .view-toggle {
+        display: flex;
+        background: var(--gray-200);
+        border-radius: var(--border-radius);
+        padding: 4px;
+    }
+
+    .view-btn {
+        background: transparent;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: var(--transition);
+        color: var(--gray-600);
+        font-weight: 500;
+    }
+
+    .view-btn.active {
+        background: var(--white);
+        color: var(--primary-color);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .calendar-content {
+        padding: 30px;
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+        min-height: 300px;
+    }
+
+    /* Schedule Section */
+    .schedule-section {
+        margin-bottom: 30px;
+    }
+
+    .schedule-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        box-shadow: var(--shadow-md);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        overflow: hidden;
+    }
+
+    .schedule-header {
+        padding: 30px;
+        border-bottom: 2px solid var(--gray-200);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .schedule-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark-color);
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .schedule-subtitle {
+        color: var(--gray-600);
+        font-size: 0.95rem;
+        margin: 5px 0 0 0;
+    }
+
+    .schedule-filters {
+        display: flex;
+        gap: 15px;
+    }
+
+    .filter-select {
+        padding: 10px 15px;
+        border: 2px solid var(--gray-300);
+        border-radius: var(--border-radius);
+        background: var(--white);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+
+    /* Schedule List */
+    .schedule-list {
+        padding: 30px;
+    }
+
+    .schedule-item {
+        background: var(--white);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--gray-200);
+        display: grid;
+        grid-template-columns: 120px 1fr 200px 150px 120px;
+        gap: 20px;
+        align-items: center;
+        transition: var(--transition);
+    }
+
+    .schedule-item:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .schedule-time {
+        text-align: center;
+    }
+
+    .time-badge {
+        background: var(--gradient-primary);
+        color: var(--white);
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 5px;
+    }
+
+    .date-info {
+        color: var(--gray-600);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .patient-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .patient-avatar {
+        width: 50px;
+        height: 50px;
+        background: var(--gradient-success);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .patient-details {
+        flex: 1;
+    }
+
+    .patient-name {
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 2px;
+        font-size: 1rem;
+    }
+
+    .patient-email {
+        color: var(--gray-600);
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+    }
+
+    .consultation-type {
+        color: var(--primary-color);
+        font-size: 0.85rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        margin: 0;
+    }
+
+    .doctor-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .doctor-avatar {
+        width: 40px;
+        height: 40px;
+        background: var(--gradient-info);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .doctor-name {
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 2px;
+        font-size: 0.95rem;
+    }
+
+    .doctor-specialty {
+        color: var(--gray-600);
+        font-size: 0.8rem;
+        margin: 0;
+    }
+
+    .status-badge {
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        text-transform: capitalize;
+    }
+
+    .status-scheduled {
+        background: rgba(52, 152, 219, 0.1);
+        color: var(--primary-color);
+        border: 1px solid rgba(52, 152, 219, 0.2);
+    }
+
+    .status-confirmed {
+        background: rgba(39, 174, 96, 0.1);
+        color: var(--success-color);
+        border: 1px solid rgba(39, 174, 96, 0.2);
+    }
+
+    .status-completed {
+        background: rgba(23, 162, 184, 0.1);
+        color: var(--info-color);
+        border: 1px solid rgba(23, 162, 184, 0.2);
+    }
+
+    .status-cancelled {
+        background: rgba(231, 76, 60, 0.1);
+        color: var(--danger-color);
+        border: 1px solid rgba(231, 76, 60, 0.2);
+    }
+
+    .schedule-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .action-btn {
+        width: 35px;
+        height: 35px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+
+    .action-btn.view-btn {
+        background: rgba(23, 162, 184, 0.1);
+        color: var(--info-color);
+    }
+
+    .action-btn.edit-btn {
+        background: rgba(243, 156, 18, 0.1);
+        color: var(--warning-color);
+    }
+
+    .action-btn.delete-btn {
+        background: rgba(231, 76, 60, 0.1);
+        color: var(--danger-color);
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-sm);
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-container {
+        background: var(--white);
+        border-radius: 20px;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-lg);
+        position: relative;
+    }
+
+    .modal-header {
+        padding: 30px 30px 20px;
+        border-bottom: 2px solid var(--gray-200);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark-color);
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--gray-500);
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 50%;
+        transition: var(--transition);
+    }
+
+    .modal-close:hover {
+        background: var(--gray-200);
+        color: var(--dark-color);
+    }
+
+    .modal-body {
+        padding: 30px;
+    }
+
+    /* Form Styles */
+    .schedule-form {
+        width: 100%;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-control {
+        padding: 14px 18px;
+        border: 2px solid var(--gray-300);
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        transition: var(--transition);
+        background: var(--white);
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: flex-end;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 2px solid var(--gray-200);
+    }
+
+    .btn-secondary {
+        background: var(--gray-200);
+        color: var(--gray-700);
+        border: none;
+        padding: 12px 25px;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-secondary:hover {
+        background: var(--gray-300);
+    }
+
+    /* Animations */
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0px) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-20px) rotate(5deg);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .admin-container {
+            margin-left: 0;
+            padding: 20px;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .schedule-item {
+            grid-template-columns: 1fr;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .calendar-header {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .schedule-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .admin-container {
+            padding: 15px;
+        }
+
+        .page-header {
+            padding: 20px;
+        }
+
+        .header-content {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stat-card {
+            padding: 20px;
+        }
+
+        .calendar-controls {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .schedule-filters {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .modal-actions {
+            flex-direction: column;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .page-title {
+            font-size: 1.8rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+        }
+
+        .schedule-item {
+            padding: 20px;
+        }
+
+        .modal-container {
+            width: 95%;
+        }
+
+        .modal-header,
+        .modal-body {
+            padding: 20px;
+        }
+    }
+</style>
+
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize AOS if available
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out-cubic',
+                once: true,
+                offset: 50
+            });
+        }
+
+        // Modal functionality
+        const addScheduleBtn = document.getElementById('addScheduleBtn');
+        const addScheduleModal = document.getElementById('addScheduleModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const addScheduleForm = document.getElementById('addScheduleForm');
+
+        if (addScheduleBtn && addScheduleModal) {
+            addScheduleBtn.addEventListener('click', function() {
+                addScheduleModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+        }
+
+        function closeModal() {
+            if (addScheduleModal) {
+                addScheduleModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                if (addScheduleForm) addScheduleForm.reset();
+            }
+        }
+
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', closeModal);
+        }
+
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', closeModal);
+        }
+
+        // Close modal when clicking outside
+        if (addScheduleModal) {
+            addScheduleModal.addEventListener('click', function(e) {
+                if (e.target === addScheduleModal) {
+                    closeModal();
+                }
+            });
+        }
+
+        // Form submission
+        if (addScheduleForm) {
+            addScheduleForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Get form data
+                const formData = new FormData(this);
+                const scheduleData = Object.fromEntries(formData);
+
+                console.log('Schedule Data:', scheduleData);
+
+                // Here you would typically send the data to your backend
+                // For now, we'll just show a success message
+                alert('Jadwal konsultasi berhasil ditambahkan!');
+                closeModal();
+            });
+        }
+
+        // Calendar navigation
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
+        const currentMonthSpan = document.getElementById('currentMonth');
+
+        let currentDate = new Date();
+
+        function updateCalendar() {
+            const monthNames = [
+                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+            ];
+
+            if (currentMonthSpan) {
+                currentMonthSpan.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            }
+
+            // Generate calendar grid (simplified)
+            generateCalendarGrid();
+        }
+
+        function generateCalendarGrid() {
+            const calendarGrid = document.getElementById('calendarGrid');
+            if (!calendarGrid) return;
+
+            // Clear existing content
+            calendarGrid.innerHTML = '';
+
+            // Add day headers
+            const dayHeaders = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+            dayHeaders.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day-header';
+                dayHeader.textContent = day;
+                dayHeader.style.cssText = `
+                padding: 10px;
+                text-align: center;
+                font-weight: 600;
+                color: var(--gray-600);
+                background: var(--gray-100);
+                border-radius: 8px;
+            `;
+                calendarGrid.appendChild(dayHeader);
+            });
+
+            // Add calendar days (simplified - just showing current month)
+            const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+            const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+
+            // Add empty cells for days before the first day of the month
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                calendarGrid.appendChild(emptyDay);
+            }
+
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                dayElement.style.cssText = `
+                padding: 15px 10px;
+                text-align: center;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: var(--transition);
+                background: var(--white);
+                border: 1px solid var(--gray-200);
+            `;
+
+                // Highlight today
+                const today = new Date();
+                if (day === today.getDate() &&
+                    currentDate.getMonth() === today.getMonth() &&
+                    currentDate.getFullYear() === today.getFullYear()) {
+                    dayElement.style.background = 'var(--gradient-primary)';
+                    dayElement.style.color = 'var(--white)';
+                    dayElement.style.fontWeight = '600';
+                }
+
+                // Add hover effect
+                dayElement.addEventListener('mouseenter', function() {
+                    if (this.style.background !== 'var(--gradient-primary)') {
+                        this.style.background = 'var(--primary-light)';
+                        this.style.color = 'var(--white)';
+                    }
+                });
+
+                dayElement.addEventListener('mouseleave', function() {
+                    if (this.style.background !== 'var(--gradient-primary)') {
+                        this.style.background = 'var(--white)';
+                        this.style.color = 'var(--dark-color)';
+                    }
+                });
+
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        if (prevMonthBtn) {
+            prevMonthBtn.addEventListener('click', function() {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                updateCalendar();
+            });
+        }
+
+        if (nextMonthBtn) {
+            nextMonthBtn.addEventListener('click', function() {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                updateCalendar();
+            });
+        }
+
+        // Initialize calendar
+        updateCalendar();
+
+        // View toggle functionality
+        const viewButtons = document.querySelectorAll('.view-btn');
+        viewButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                viewButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                const view = this.getAttribute('data-view');
+                console.log('Switching to view:', view);
+                // Implement view switching logic here
+            });
+        });
+
+        // Filter functionality
+        const doctorFilter = document.getElementById('doctorFilter');
+        const statusFilter = document.getElementById('statusFilter');
+
+        function filterSchedules() {
+            const doctorValue = doctorFilter ? doctorFilter.value : '';
+            const statusValue = statusFilter ? statusFilter.value : '';
+
+            const scheduleItems = document.querySelectorAll('.schedule-item');
+
+            scheduleItems.forEach(item => {
+                let showItem = true;
+
+                // Filter by doctor (simplified - you'd implement actual filtering logic)
+                if (doctorValue && !item.textContent.toLowerCase().includes(doctorValue.toLowerCase())) {
+                    showItem = false;
+                }
+
+                // Filter by status (simplified - you'd implement actual filtering logic)
+                if (statusValue) {
+                    const statusBadge = item.querySelector('.status-badge');
+                    if (statusBadge && !statusBadge.className.includes(`status-${statusValue}`)) {
+                        showItem = false;
+                    }
+                }
+
+                item.style.display = showItem ? 'grid' : 'none';
+            });
+        }
+
+        if (doctorFilter) {
+            doctorFilter.addEventListener('change', filterSchedules);
+        }
+
+        if (statusFilter) {
+            statusFilter.addEventListener('change', filterSchedules);
+        }
+
+        // Action button functionality
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+
+                const action = this.classList.contains('view-btn') ? 'view' :
+                    this.classList.contains('edit-btn') ? 'edit' : 'delete';
+
+                console.log(`${action} action clicked`);
+
+                if (action === 'delete') {
+                    if (confirm('Apakah Anda yakin ingin menghapus jadwal ini?')) {
+                        // Implement delete logic
+                        this.closest('.schedule-item').remove();
+                    }
+                }
+            });
+        });
+
+        // Set minimum date for schedule form
+        const scheduleDateInput = document.getElementById('scheduleDate');
+        if (scheduleDateInput) {
+            const today = new Date().toISOString().split('T')[0];
+            scheduleDateInput.min = today;
+        }
+    });
+</script>
+
+<!-- Add AOS Library -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 @endsection

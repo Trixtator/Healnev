@@ -1,2 +1,12 @@
 *
 !.gitignore
+/vendor
+/node_modules
+.env
+.DS_Store
+/public/storage
+/storage/*.key
+.idea
+.phpunit.result.cache
+*.log
+

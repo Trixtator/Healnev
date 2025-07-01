@@ -25,29 +25,29 @@
 
     <div class="row">
         @forelse($rumahsakit as $rs)
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex align-items-stretch">
-                <a href="{{ route('user.hospital.detail', $rs->id) }}" class="hospital-card w-100">
-                    <div class="card-image">
-                        @if($rs->gambar)
-                            <img src="{{ asset('storage/' . $rs->gambar) }}" alt="{{ $rs->nama }}">
-                        @else
-                            <div class="image-placeholder">
-                                <i class="icofont-hospital" style="font-size: 50px;"></i>
-                            </div>
-                        @endif
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex align-items-stretch">
+            <a href="{{ route('detail-hospital', $rs->id) }}" class="hospital-card w-100">
+                <div class="card-image">
+                    @if($rs->gambar)
+                    <img src="{{ asset('storage/' . $rs->gambar) }}" alt="{{ $rs->nama }}">
+                    @else
+                    <div class="image-placeholder">
+                        <i class="icofont-hospital" style="font-size: 50px;"></i>
                     </div>
-
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">{{ $rs->nama }}</h5>
-                    </div>
-                </a>
-            </div>
-        @empty
-            <div class="col-12">
-                <div class="alert alert-info text-center">
-                    Tidak ada data rumah sakit untuk ditampilkan saat ini.
+                    @endif
                 </div>
+
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ $rs->nama }}</h5>
+                </div>
+            </a>
+        </div>
+        @empty
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                There is no hospital data to display at this time.
             </div>
+        </div>
         @endforelse
     </div>
 

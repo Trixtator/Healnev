@@ -25,35 +25,35 @@
 
     <div class="row">
         @forelse($pakets as $paket)
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex align-items-stretch">
-                <a href="{{ route('detail-paket', $paket->id) }}" class="paket-card w-100">
-                    <div class="card-image">
-                        @if($paket->gambar)
-                            <img src="{{ asset('storage/' . $paket->gambar) }}" alt="{{ $paket->nama_paket }}">
-                        @else
-                            <div class="image-placeholder">
-                                <i class="icofont-image"></i>
-                            </div>
-                        @endif
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex align-items-stretch">
+            <a href="{{ route('detail-paket', $paket->id) }}" class="paket-card w-100">
+                <div class="card-image">
+                    @if($paket->gambar)
+                    <img src="{{ asset('storage/' . $paket->gambar) }}" alt="{{ $paket->nama_paket }}">
+                    @else
+                    <div class="image-placeholder">
+                        <i class="icofont-image"></i>
                     </div>
-
-                    <div class="card-body d-flex flex-column">
-                        <div class="mb-auto">
-                            <h5 class="card-title">{{ $paket->nama_paket }}</h5>
-                            <p class="card-provider">{{ $paket->rumahsakit->nama ?? '' }}</p>
-                        </div>
-                        <div class="card-price">
-                            Rp {{ number_format($paket->harga, 0, ',', '.') }}
-                        </div>
-                    </div>
-                </a>
-            </div>
-        @empty
-            <div class="col-12">
-                <div class="alert alert-info text-center">
-                    Saat ini belum ada paket layanan yang tersedia.
+                    @endif
                 </div>
+
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-auto">
+                        <h5 class="card-title">{{ $paket->nama_paket }}</h5>
+                        <p class="card-provider">{{ $paket->rumahsakit->nama ?? '' }}</p>
+                    </div>
+                    <div class="card-price">
+                        Rp {{ number_format($paket->harga, 0, ',', '.') }}
+                    </div>
+                </div>
+            </a>
+        </div>
+        @empty
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                There are currently no service packages available.
             </div>
+        </div>
         @endforelse
     </div>
 

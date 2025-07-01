@@ -27,10 +27,10 @@
         <div class="row">
             <div class="col-lg-4 col-sm-6 col-md-6">
                 <div class="contact-block mb-4 mb-lg-0">
-                    <a href="https://wa.me/6285803061558" target="_blank">
+                    <a href="https://wa.me/6281222071884" target="_blank">
                         <i class="icofont-brand-whatsapp"></i>
                         <h5>WhatsApp Us</h5>
-                        085803061558
+                        081222071884
                     </a>
                 </div>
             </div>
@@ -45,10 +45,10 @@
             </div>
             <div class="col-lg-4 col-sm-6 col-md-6">
                 <div class="contact-block mb-4 mb-lg-0">
-                    <a href="https://maps.app.goo.gl/oUQLB7K66SM8jM6h8" target="_blank">
+                    <a href="https://maps.app.goo.gl/zupTKRg9xQc5neHu9" target="_blank">
                         <i class="icofont-location-pin"></i>
                         <h5>Location</h5>
-                        Siloam Hospitals Yogyakarta
+                        Universitas 'Aisyiyah Yogyakarta
                     </a>
                 </div>
             </div>
@@ -57,7 +57,7 @@
     <div class="map-container">
         <div class="col-lg-8 col-md-8 p-4 mb-lg-0 mb-3 bg-white rounded">
             <iframe class="w-100 rounded" height="320px"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31624.482800983747!2d110.35482931083983!3d-7.783426400000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59c55cef4c69%3A0xc020b62112edd35e!2sSiloam%20Hospitals%20Yogyakarta!5e0!3m2!1sen!2sid!4v1717258696006!5m2!1sen!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4051.0028126466605!2d110.32892709678956!3d-7.7683667000000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a587709f8feb9%3A0x9092c640c6f901ac!2sUniversitas%20&#39;Aisyiyah%20Yogyakarta!5e1!3m2!1sid!2sid!4v1750588990436!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
     </div>
 </section>

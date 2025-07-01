@@ -30,10 +30,6 @@ use App\Http\Controllers\MidtransController;
 
 
 
-
-
-
-
 DriverManager::loadDriver(\BotMan\Drivers\Web\WebDriver::class);
 
 /*
@@ -120,7 +116,7 @@ Route::post('password/reset', [AuthController::class, 'updatePassword'])->name('
 
 // MCU Registration Routes
 Route::post('/submit-registration', [RegistrationController::class, 'submitRegistration'])->name('submit-registration');
-Route::get('/verify-registration', [RegistrationController::class, 'verifyRegistration'])->name('verify-registration');
+Route::get('/verify-registration', [RegistrationController::class, 'verify'])->name('verify-registration');
 Route::post('/create-pdf', [RegistrationController::class, 'createPDF'])->name('create-pdf');
 Route::get('/back-to-main', [RegistrationController::class, 'backToMain'])->name('back-to-main');
 
@@ -265,7 +261,7 @@ Route::post('/midtrans/callback', [MidtransController::class, 'callback']);
 
 Route::get('/paket/{id}', [PemesananController::class, 'form'])->name('pemesanan.form');
 Route::post('/pemesanan/proses', [PemesananController::class, 'proses'])->name('pemesanan.proses');
-Route::get('/pembayaran/{id}', [PembayaranController::class, 'bayar'])->name('bayar.midtrans');
+// Route::get('/pembayaran/{id}', [PembayaranController::class, 'bayar'])->name('bayar.midtrans');
 // Route::get('/user/paket/{id}', [UserPaketController::class, 'detailPaket'])->name('user.paket.detail');
 
 Route::get('/paket/{id}', [PaketController::class, 'show'])->name('user.paket.detail');
@@ -302,7 +298,7 @@ Route::get('/packages', [PaketController::class, 'publicIndex'])->name('packages
 Route::get('/user/paket/{id}', [PaketController::class, 'show'])->name('user.paket.detail');
 
 Route::get('/paket/{id}', [PaketController::class, 'show'])->name('detail-paket');
-Route::get('/hospital/{id}', [HospitalController::class, 'show'])->name('user.hospital.detail');
+Route::get('/hospital/{id}', [RumahSakitController::class, 'show'])->name('detail-hospital');
 
 Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
 

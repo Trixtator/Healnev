@@ -8,12 +8,9 @@
 
     <title>HealthNav</title>
 
-
-
-
     <!-- bootstrap.min css -->
-     <!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
     <!-- Icon Font Css -->
     <link rel="stylesheet" href=" {{asset('assets/plugins/icofont/icofont.min.css')}}">
@@ -25,36 +22,12 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
-
-    
 </head>
 
 <body id="top">
 
-    <!--##########################################################################################################################-->
-
     <!-- Header Start -->
     <header>
-        <!-- <div class="header-top-bar">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-6">
-                        <ul class="top-bar-info list-inline-item pl-0 mb-0">
-                            <li class="list-inline-item"><a href="mailto:support@care.com"><i class="icofont-support-faq mr-2"></i>HealthNav@care.com</a></li>
-                            <li class="list-inline-item"><i class="icofont-location-pin mr-2"></i>Yogyakarta, Indonesia </li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="text-lg-right top-right-bar mt-2 mt-lg-0">
-                            <a href="tel:+23-345-67890">
-                                <span>Call Now : </span>
-                                <span class="">+62 877-3903-5397</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
         <nav class="navbar navbar-expand-lg navigation nav-glass" id="navbar">
             <div class="container">
                 <a class="navbar-brand" href="{{ route('home') }}">
@@ -66,237 +39,221 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarmain">
-    <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-light {{ Route::is('home') ? 'active' : '' }}" href="{{ route('home') }}">
+                                Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light {{ Route::is('about') ? 'active' : '' }}" href="{{ route('about') }}">
+                                About
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light {{ Route::is('contact') ? 'active' : '' }}" href="{{ route('contact') }}">
+                                Contact
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light {{ (Route::is('packages') || Route::is('detail-paket')) ? 'active' : '' }}" href="{{ route('packages') }}">
+                                packages
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light {{ (Route::is('hospital') || Route::is('detail-hospital')) ? 'active' : '' }}" href="{{ route('hospital') }}">
+                                Our Hospital
+                            </a>
+                        </li>
 
-        {{-- Tautan ke Halaman Home --}}
-        <li class="nav-item">
-            <a class="nav-link text-light {{ Route::is('home') ? 'active' : '' }}" href="{{ route('home') }}">
-                Home
-            </a>
-        </li>
-
-        {{-- Tautan ke Halaman About --}}
-        <li class="nav-item">
-            <a class="nav-link text-light {{ Route::is('about') ? 'active' : '' }}" href="{{ route('about') }}">
-                About
-            </a>
-        </li>
-        
-        {{-- Tautan ke Halaman Contact --}}
-        <li class="nav-item">
-            <a class="nav-link text-light {{ Route::is('contact') ? 'active' : '' }}" href="{{ route('contact') }}">
-                Contact
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link text-light {{ (Route::is('packages') || Route::is('detail-paket')) ? 'active' : '' }}" href="{{ route('packages') }}">
-                packages
-            </a>
-        </li>
-
-        {{-- Tautan ke Halaman Our Hospital --}}
-        {{-- Logika ini akan aktif baik di halaman utama rumah sakit maupun di halaman detailnya --}}
-        <li class="nav-item">
-            <a class="nav-link text-light {{ (Route::is('hospital') || Route::is('detail-hospital')) ? 'active' : '' }}" href="{{ route('hospital') }}">
-                Our Hospital
-            </a>
-        </li>
-
-        {{-- Logika untuk Pengguna yang Sudah Login atau Belum --}}
-        @auth
-            {{-- Jika sudah login, tampilkan dropdown menu --}}
-            <li class="nav-item dropdown">
-                <a class="nav-link text-light dropdown-toggle" href="#" id="userDropdown" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Hello, {{ Auth::user()->name }}
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                    <a class="dropdown-item {{ Route::is('profile*') ? 'active' : '' }}" href="{{ route('profile') }}">My Profile</a>
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="dropdown-item">Logout</button>
-                    </form>
+                        @auth
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-light dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Hello, {{ Auth::user()->name }}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                                <a class="dropdown-item {{ Route::is('profile*') ? 'active' : '' }}" href="{{ route('profile') }}">My Profile</a>
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">Logout</button>
+                                </form>
+                            </div>
+                        </li>
+                        @else
+                        <li class="nav-item">
+                            <a class="nav-link text-light {{ Route::is('login') ? 'active' : '' }}" href="{{ route('login') }}">
+                                Login
+                            </a>
+                        </li>
+                        @endauth
+                    </ul>
                 </div>
-            </li>
-        @else
-            {{-- Jika belum login, tampilkan link untuk Login --}}
-            <li class="nav-item">
-                <a class="nav-link text-light {{ Route::is('login') ? 'active' : '' }}" href="{{ route('login') }}">
-                    Login
-                </a>
-            </li>
-        @endauth
-    </ul>
-</div>
             </div>
         </nav>
     </header>
     <!-- Header End -->
 
-    <!--##########################################################################################################################-->
-
     @yield('content')
 
-    <!--##########################################################################################################################-->
+    <!-- Enhanced Minimalist Footer -->
+    <footer class="footer-minimalist">
+        <!-- Decorative Wave -->
+        <div class="footer-content">
+            <div class="container">
+                <!-- Main Footer Content -->
+                <div class="row g-5 mb-5">
+                    <!-- Brand Section -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="footer-brand">
+                            <div class="brand-logo mb-4">
+                                <img src="{{ asset('assets/images/logoo.png') }}" alt="HealthNav" class="footer-logo">
+                            </div>
+                            <p class="brand-description">
+                                Your trusted partner in healthcare journey. We provide world-class medical tourism services with comfort, safety, and excellence.
+                            </p>
+                            <div class="social-links">
+                                <a href="https://www.instagram.com/health.nav?igsh=MW15MzhidGR3aWJpdg%3D%3D&utm_source=qr"
+                                    target="_blank" rel="noopener noreferrer" class="social-link instagram">
+                                    <i class="icofont-instagram"></i>
+                                </a>
+                                <a href="https://wa.me/6281222071884"
+                                    target="_blank" rel="noopener noreferrer" class="social-link whatsapp">
+                                    <i class="icofont-whatsapp"></i>
+                                </a>
+                                <!-- <a href="#" class="social-link youtube">
+                                    <i class="icofont-youtube-play"></i>
+                                </a> -->
+                            </div>
+                        </div>
+                    </div>
 
-    <!-- footer Start -->
-   <footer class="footer-modern">
-    {{-- Elemen dekoratif untuk bagian atas footer --}}
-    <div class="footer-shape-top">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" fill="none">
-            <path d="M1440 21.2105V120H0V21.2105C506.667 6.42105 1104 -16.9474 1440 21.2105Z" fill="#002F4B"/>
-        </svg>
-    </div>
+                    <!-- Quick Links -->
+                    <div class="col-lg-2 col-md-6">
+                        <div class="footer-links">
+                            <h5 class="footer-title">Quick Links</h5>
+                            <ul class="link-list">
+                                <li><a href="{{ route('home') }}">Home</a></li>
+                                <li><a href="{{ route('about') }}">About Us</a></li>
+                                <li><a href="{{ route('packages') }}">Packages</a></li>
+                                <li><a href="{{ route('hospital') }}">Hospitals</a></li>
+                                <li><a href="{{ route('contact') }}">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
 
-    <div class="container">
-        <div class="row">
+                    <!-- Services
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-links">
+                            <h5 class="footer-title">Our Services</h5>
+                            <ul class="link-list">
+                                <li><a href="#">Medical Consultation</a></li>
+                                <li><a href="#">Health Checkup</a></li>
+                                <li><a href="#">Surgery Packages</a></li>
+                                <li><a href="#">Recovery Programs</a></li>
+                                <li><a href="#">Travel Assistance</a></li>
+                            </ul>
+                        </div>
+                    </div> -->
 
-            {{-- Kolom 1: Tentang Perusahaan & Logo --}}
-            <div class="col-lg-4 col-md-6 mb-5 mb-lg-0">
-                <div class="footer-widget">
-                    <img src="{{ asset('assets/images/logoo.png') }}" alt="HealthNav Logo" class="footer-logo mb-4">
-                    <p>We are your trusted partner in your healthcare journey, providing safe, comfortable, and high-quality international medical services.</p>
-                    
-                    <h5 class="social-title mt-4">Follow Us</h5>
-                    <ul class="footer-socials list-inline">
-                        <li class="list-inline-item">
-                           <a href="https://www.instagram.com/health.nav?igsh=MW15MzhidGR3aWJpdg%3D%3D&utm_source=qr" 
-                                aria-label="Instagram" 
-                                target="_blank" 
-                                rel="noopener noreferrer">
-                                <i class="icofont-instagram"></i>
-                            </a>
+                    <!-- Contact Info -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-contact">
+                            <h5 class="footer-title">Get in Touch</h5>
+                            <div class="contact-info">
+                                <div class="contact-item">
+                                    <div class="contact-icon">
+                                        <i class="icofont-location-pin"></i>
+                                    </div>
+                                    <div class="contact-text">
+                                        <p>Jl. Laksda Adisucipto No.32-34 Yogyakarta, Indonesia</p>
+                                    </div>
+                                </div>
+                                <div class="contact-item">
+                                    <div class="contact-icon">
+                                        <i class="icofont-phone"></i>
+                                    </div>
+                                    <div class="contact-text">
+                                        <p>+6281222071884</p>
+                                    </div>
+                                </div>
+                                <div class="contact-item">
+                                    <div class="contact-icon">
+                                        <i class="icofont-email"></i>
+                                    </div>
+                                    <div class="contact-text">
+                                        <p>info@healthnav.com</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="https://wa.me/6283140728424" 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                aria-label="WhatsApp">
-                                <i class="icofont-whatsapp"></i>
-                            </a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="#" aria-label="YouTube"><i class="icofont-youtube-play"></i></a>
-                        </li>
-                    </ul>
+                <!-- Footer Bottom -->
+                <div class="footer-bottom">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <p class="copyright-text">
+                                &copy; {{ date('Y') }} <strong>HealthNav</strong>. All rights reserved.
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="footer-bottom-links">
+                                <a href="#">Privacy Policy</a>
+                                <a href="#">Terms of Service</a>
+                                <a href="#">Support</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            {{-- Kolom 2: Link Navigasi Cepat --}}
-            <div class="col-lg-4 col-md-6 mb-5 mb-lg-0">
-                <div class="footer-widget">
-                    <h4 class="widget-title">Quick Links</h4>
-                    <ul class="list-unstyled footer-links">
-                        <li><a href="{{ route('home') }}"><i class="icofont-simple-right"></i> Home</a></li>
-                        <li><a href="{{ route('about') }}"><i class="icofont-simple-right"></i> About Us</a></li>
-                        <li><a href="{{ route('paket.index') }}"><i class="icofont-simple-right"></i> Our Packages</a></li>
-                        <li><a href="{{ route('hospital') }}"><i class="icofont-simple-right"></i> Our Hospitals</a></li>
-                        <li><a href="{{ route('contact') }}"><i class="icofont-simple-right"></i> Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            {{-- Kolom 3: Informasi Kontak --}}
-            <div class="col-lg-4 col-md-6">
-                <div class="footer-widget">
-                    <h4 class="widget-title">Contact Info</h4>
-                    <ul class="list-unstyled footer-contact-info">
-                        <li>
-                            <i class="icofont-location-pin"></i>
-                            <p>Jl. Laksda Adisucipto No.32-34, Demangan, Gondokusuman, Yogyakarta</p>
-                        </li>
-                        <li>
-                            <i class="icofont-ui-touch-phone"></i>
-                            <p>++62 831-4072-8424</p>
-                        </li>
-                        <li>
-                            <i class="icofont-email"></i>
-                            <p>info@healthnav.com</p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
         </div>
-    </div>
+    </footer>
 
-    {{-- Bagian Copyright di paling bawah --}}
-    <div class="footer-bottom">
-        <div class="container text-center">
-            <p class="copyright-text mb-0">&copy; {{ date('Y') }} HealthNav. All Rights Reserved.</p>
-        </div>
-    </div>
-</footer>
-
-    <!-- footer End -->
-
-
-    <!--##########################################################################################################################-->
-
-    <!-- 
-    Essential Scripts
-    =====================================-->
-
-    <!-- Main jQuery -->
-    <script src="{{ asset('assets/plugins/jquery/jquery.js') }}
-    "></script>
-    <!-- Bootstrap 4.3.2 -->
+    <!-- Scripts -->
+    <script src="{{ asset('assets/plugins/jquery/jquery.js') }}"></script>
     <script src="{{ asset('assets/plugins/bootstrap/js/popper.js') }}"></script>
     <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/counterup/jquery.easing.js') }}"></script>
-    <!-- Slick Slider -->
     <script src="{{ asset('assets/plugins/slick-carousel/slick/slick.min.js') }}"></script>
-    <!-- Counterup -->
     <script src="{{ asset('assets/plugins/counterup/jquery.waypoints.min.js') }}"></script>
-
     <script src="{{ asset('assets/plugins/shuffle/shuffle.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/counterup/jquery.counterup.min.js') }}"></script>
-    <!-- Google Map -->
     <script src="{{ asset('assets/plugins/google-map/map.js') }}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkeLMlsiwzp6b3Gnaxd86lvakimwGA6UA&callback=initMap"></script>
-
     <script src="{{ asset('assets/js/script.js') }}"></script>
     <script src="{{ asset('assets/js/contact.js') }}"></script>
-    <!-- Bootstrap JS with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-@stack('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @stack('scripts')
 
-
-    <!-- botman -->
+    <!-- Botman Widget -->
     <script>
-    var botmanWidget = {
-        aboutText: 'FAQ Bot',
-        introMessage: "👋 Hai! Ketik 'faq' untuk melihat pertanyaan umum."
-    };
-</script>
+        var botmanWidget = {
+            title: 'Health Nav',
+            aboutText: 'FAQ Bot',
+            introMessage: "👋 Hai! Ketik 'faq' untuk melihat pertanyaan umum."
+        };
+    </script>
+    <script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
 
-<script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
-<style>
-        /* Target container pesan yang sudah kita beri "tanda" user-bubble */
+    <style>
+        /* Botman Styles */
         .botman-container .message.user-bubble {
-            /* Mendorong seluruh baris pesan ke ujung kanan */
             justify-content: flex-end;
         }
 
-        /* Target bubble chat di dalam container yang sudah ditandai */
         .botman-container .message.user-bubble .msg-content {
-            /* Mengubah warna latar belakangnya agar seperti chat dari user */
-            /* Anda bisa mengganti kode warna #0084ff ini sesuai selera */
             background-color: #0084ff;
             color: white;
         }
-    </style>
 
-    <style>
+        /* Dropdown Styles */
         .dropdown-menu {
             left: auto !important;
             right: 0 !important;
             top: 100% !important;
-           
         }
-
 
         .dropdown-item {
             padding: 0.5rem 1.5rem;
@@ -310,135 +267,318 @@
             padding: 0;
         }
 
-        .footer-modern {
-    position: relative;
-    background-color: #002F4B; /* Warna tema Anda */
-    color: rgba(255, 255, 255, 0.7); /* Warna teks putih transparan */
-    padding: 150px 0 0 0; /* Padding atas lebih besar untuk memberi ruang bagi shape */
-}
+        /* Enhanced Minimalist Footer Styles */
+        .footer-minimalist {
+            position: relative;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: #e2e8f0;
+            margin-top: 0;
+        }
 
-/* Elemen SVG dekoratif di bagian atas */
-.footer-shape-top {
-    position: absolute;
-    top: -1px; /* Sedikit overlap untuk menghilangkan celah */
-    left: 0;
-    width: 100%;
-    z-index: 1;
-}
-.footer-shape-top svg {
-    width: 100%;
-    height: auto;
-}
+        .footer-wave {
+            position: absolute;
+            top: -1px;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            overflow: hidden;
+            z-index: 1;
+        }
 
-/* Logo di footer */
-.footer-logo {
-    max-width: 250px;
-    filter: brightness(0) invert(1); /* Membuat logo PNG hitam menjadi putih */
-}
+        .footer-wave svg {
+            width: 100%;
+            height: 100%;
+        }
 
-/* Judul setiap widget di footer */
-.widget-title {
-    color: #ffffff;
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 25px;
-    position: relative;
-    padding-bottom: 10px;
-}
+        .footer-content {
+            position: relative;
+            z-index: 2;
+            padding: 140px 0 40px;
+        }
 
-/* Garis bawah dekoratif untuk judul widget */
-.widget-title::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 40px;
-    height: 2px;
-    background-color: #e12454; /* Warna aksen pink dari tema Anda */
-}
+        /* Brand Section */
+        .footer-brand {
+            max-width: 350px;
+        }
 
-/* Link navigasi di footer */
-.footer-links li a {
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    padding: 5px 0;
-    display: inline-block;
-    transition: all 0.3s ease;
-}
-.footer-links li a:hover {
-    color: #ffffff;
-    transform: translateX(5px);
-}
-.footer-links li i {
-    margin-right: 8px;
-    font-size: 12px;
-}
+        .footer-logo {
+            max-height: 60px;
+            width: auto;
+            filter: brightness(0) invert(1);
+            transition: all 0.3s ease;
+        }
 
-/* Informasi kontak di footer */
-.footer-contact-info li {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 15px;
-}
-.footer-contact-info i {
-    font-size: 20px;
-    color: #e12454; /* Warna aksen pink */
-    margin-right: 15px;
-    margin-top: 5px;
-}
-.footer-contact-info p {
-    margin-bottom: 0;
-}
+        .brand-description {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #cbd5e1;
+            margin-bottom: 30px;
+        }
 
-/* Ikon sosial media */
-.social-title {
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 600;
-}
-.footer-socials li a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-    color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    transition: all 0.3s ease;
-}
-.footer-socials li a:hover {
-    background-color: #e12454; /* Warna aksen pink */
-    transform: translateY(-3px);
-}
+        /* Social Links */
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
 
-/* Bagian copyright */
-.footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 25px 0;
-    margin-top: 50px;
-}
-.copyright-text {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.5);
-}
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 18px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .social-link.instagram:hover {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+
+        .social-link.whatsapp:hover {
+            background: #25d366;
+        }
+
+        .social-link.youtube:hover {
+            background: #ff0000;
+        }
+
+        /* Footer Titles */
+        .footer-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 12px;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 30px;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            border-radius: 2px;
+        }
+
+        /* Links */
+        .link-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .link-list li {
+            margin-bottom: 12px;
+        }
+
+        .link-list a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 0;
+        }
+
+        .link-list a:hover {
+            color: #ffffff;
+            padding-left: 8px;
+        }
+
+        .link-list a::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 2px;
+            background: #3b82f6;
+            transition: width 0.3s ease;
+        }
+
+        .link-list a:hover::before {
+            width: 6px;
+        }
+
+        /* Contact Info */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .contact-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 10px;
+            color: #3b82f6;
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .contact-text p {
+            margin: 0;
+            color: #cbd5e1;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* Footer Bottom */
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            margin-top: 50px;
+        }
+
+        .copyright-text {
+            margin: 0;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            justify-content: flex-end;
+            gap: 25px;
+        }
+
+        .footer-bottom-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-bottom-links a:hover {
+            color: #ffffff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .footer-content {
+                padding: 120px 0 30px;
+            }
+
+            .footer-brand {
+                max-width: 100%;
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            .footer-title {
+                text-align: center;
+                font-size: 16px;
+            }
+
+            .link-list {
+                text-align: center;
+            }
+
+            .contact-info {
+                align-items: center;
+            }
+
+            .contact-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .footer-bottom-links {
+                justify-content: center;
+                margin-top: 20px;
+                gap: 15px;
+            }
+
+            .copyright-text {
+                text-align: center;
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .footer-wave {
+                height: 80px;
+            }
+
+            .footer-content {
+                padding: 100px 0 25px;
+            }
+
+            .social-link {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            .footer-bottom-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .footer-brand,
+        .footer-links,
+        .footer-contact {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .footer-links {
+            animation-delay: 0.1s;
+        }
+
+        .footer-contact {
+            animation-delay: 0.2s;
+        }
     </style>
 
-    <!--Start of Tawk.to Script-->
-<!-- <script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/684f0354b28b01190c4fd87f/1itqaa0mr';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script> -->
-<!--End of Tawk.to Script-->
-@stack('scripts') 
+    @stack('scripts')
 </body>
 
 </html>

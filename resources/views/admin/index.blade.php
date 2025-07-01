@@ -79,7 +79,8 @@
         border-collapse: collapse;
     }
 
-    th, td {
+    th,
+    td {
         padding: 15px;
         text-align: left;
         border: 1px solid #ddd;
@@ -102,7 +103,7 @@
     }
 
     /* Hide default pagination text */
-    nav + div {
+    nav+div {
         display: none !important;
     }
 
@@ -133,31 +134,31 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nama</th>
+                    <th>Name</th>
                     <th>Email</th>
-                    <th>Paspor</th>
-                    <th>Tanggal Reservasi</th>
-                    <th>Paket</th>
-                    <th>Rumah Sakit</th>
+                    <th>Passport</th>
+                    <th>Reservation Date</th>
+                    <th>Package</th>
+                    <th>Hospital</th>
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($orders as $order)
-                    <tr>
-                        <td>{{ $order->id }}</td>
-                        <td>{{ $order->user->name ?? '-' }}</td>
-                        <td>{{ $order->user->email ?? '-' }}</td>
-                        <td>{{ $order->user->passport_name ?? '-' }}</td>
-                        <td>{{ \Carbon\Carbon::parse($order->booking_date)->format('d M Y') }}</td>
-                        <td>{{ $order->paket->nama_paket ?? '-' }}</td>
-                        <td>{{ $order->paket->rumahsakit->nama ?? '-' }}</td>
-                        <td>{{ ucfirst($order->payment_status) }}</td>
-                    </tr>
+                <tr>
+                    <td>{{ $order->id }}</td>
+                    <td>{{ $order->user->name ?? '-' }}</td>
+                    <td>{{ $order->user->email ?? '-' }}</td>
+                    <td>{{ $order->user->passport_name ?? '-' }}</td>
+                    <td>{{ \Carbon\Carbon::parse($order->booking_date)->format('d M Y') }}</td>
+                    <td>{{ $order->paket->nama_paket ?? '-' }}</td>
+                    <td>{{ $order->paket->rumahsakit->nama ?? '-' }}</td>
+                    <td>{{ ucfirst($order->payment_status) }}</td>
+                </tr>
                 @empty
-                    <tr>
-                        <td colspan="8" class="text-center">Tidak ada data ditemukan.</td>
-                    </tr>
+                <tr>
+                    <td colspan="8" class="text-center">No data found.</td>
+                </tr>
                 @endforelse
             </tbody>
         </table>
