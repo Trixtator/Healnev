@@ -9,13 +9,13 @@
                     <div class="card-header bg-primary text-white">
                         <h4 class="mb-0">Invoice: {{ $order->order_code }}</h4>
                         <small>Status:
-                            @if($order->payment_status === 'paid')
-                            <span class="badge bg-success">LUNAS</span>
-                            @elseif($order->payment_status === 'pending')
-                            <span class="badge bg-warning">MENUNGGU PEMBAYARAN</span>
-                            @else
-                            <span class="badge bg-danger">BELUM BAYAR</span>
-                            @endif
+                        @if($order->payment_status === 'paid')
+                        <span class="badge bg-success">PEMBAYARAN SUKSES</span>
+                        @elseif($order->payment_status === 'pending')
+                        <span class="badge bg-warning">MENUNGGU PEMBAYARAN</span>
+                        @else
+                        <span class="badge bg-danger">BELUM BAYAR</span>
+                        @endif
                         </small>
                     </div>
                     <div class="card-body">
@@ -139,17 +139,10 @@
                             onSuccess: function(result) {
                                 console.log('Payment success:', result);
 
-                                // Update status di frontend langsung
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Pembayaran Berhasil!',
-                                    text: 'Terima kasih atas pembayaran Anda.',
-                                    showConfirmButton: true,
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    // Reload halaman untuk menampilkan status terbaru
-                                    window.location.reload();
-                                });
+                                // Tunggu sebentar lalu check status
+                                setTimeout(function() {
+                                    checkPaymentStatus();
+                                }, 2000);
                             },
                             onPending: function(result) {
                                 console.log('Payment pending:', result);
@@ -159,7 +152,9 @@
                                     title: 'Pembayaran Tertunda',
                                     text: 'Silakan selesaikan pembayaran Anda.',
                                 }).then(() => {
-                                    window.location.reload();
+                                    setTimeout(function() {
+                                        checkPaymentStatus();
+                                    }, 2000);
                                 });
                             },
                             onError: function(result) {
@@ -186,13 +181,44 @@
                         });
                         resetButton();
                     });
-
-                function resetButton() {
-                    isPaying = false;
-                    payButton.disabled = false;
-                    payButton.innerHTML = 'Bayar Sekarang';
-                }
             });
+        }
+
+        // Function untuk check status pembayaran
+        function checkPaymentStatus() {
+            fetch('{{ route("invoice.status", $order->id) }}', {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.payment_status === 'paid') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Pembayaran Berhasil!',
+                        text: 'Terima kasih atas pembayaran Anda.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    // Jika belum paid, tunggu lagi
+                    setTimeout(checkPaymentStatus, 3000);
+                }
+            })
+            .catch(error => {
+                console.log('Error checking status:', error);
+                window.location.reload();
+            });
+        }
+
+        function resetButton() {
+            isPaying = false;
+            payButton.disabled = false;
+            payButton.innerHTML = 'Bayar Sekarang';
         }
     });
 </script>
