@@ -24,6 +24,10 @@ use App\Http\Controllers\PemesananController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MidtransController;
+use App\Http\Controllers\TestimoniController;
+use App\Http\Controllers\Admin\TestimoniController as AdminTestimoniController;
+
+
 
 
 
@@ -158,58 +162,59 @@ Route::match(['get', 'post'], '/botman', function (Request $request) {
     $config = [];
     $botman = BotManFactory::create($config);
 
-    // [KUNCI 1] FUNGSI PEMBUAT CHAT
-    // Fungsi ini dirancang untuk membuat 2 chat bubble: satu untuk user, satu untuk bot.
+    // [KEY 1] CHAT GENERATION FUNCTION
+    // This function is designed to create two chat bubbles: one for the user, one for the bot.
     function faqAnswer(BotMan $bot, string $questionText, string $answerText)
     {
-        // Perintah ini membuat bubble chat dengan 'tanda' CSS khusus agar bisa dipindah ke kanan.
+        // This creates a chat bubble with a special CSS class so it appears on the right.
         $bot->reply($questionText, [
-            'css_class' => 'user-bubble' // Ini adalah "tanda" untuk CSS
+            'css_class' => 'user-bubble' // This is a CSS marker
         ]);
 
-        // Bot jeda sejenak, seolah sedang mengetik.
+        // The bot pauses for a moment as if it's typing.
         $bot->typesAndWaits(1);
 
-        // Bot mengirim jawaban finalnya (ini akan muncul di kiri secara normal).
+        // The bot sends its final answer (normally displayed on the left).
         $bot->reply($answerText);
     }
 
-    // Trigger utama untuk menampilkan pertanyaan.
-    $botman->hears('faq|help|bantuan|pertanyaan', function (BotMan $bot) {
-        $question = Question::create('Silakan pilih pertanyaan di bawah ini:')
-            // [PENTING] Pastikan .setAsNotified(true) TIDAK ADA di sini.
+    // Main trigger to show FAQ options.
+    $botman->hears('faq|help|support|questions', function (BotMan $bot) {
+        $question = Question::create('Please choose a question below:')
+            // [IMPORTANT] Make sure .setAsNotified(true) is NOT present here.
             ->addButtons([
-                Button::create('Bagaimana cara daftar akun?')->value('faq_daftar'),
-                Button::create('Lupa password akun')->value('faq_lupa'),
-                Button::create('Cara ubah email')->value('faq_email'),
-                Button::create('Cara hapus akun')->value('faq_hapus'),
-                Button::create('Cara pesan layanan')->value('faq_pesan'),
-                Button::create('Metode pembayaran?')->value('faq_bayar'),
-                Button::create('Lihat riwayat pesanan')->value('faq_riwayat'),
-                Button::create('Apa itu MCU & Wisata?')->value('faq_mcu'),
-                Button::create('Cara membatalkan pesanan')->value('faq_batal'),
+                Button::create('How to register an account?')->value('faq_register'),
+                Button::create('Forgot account password')->value('faq_forgot'),
+                Button::create('How to change email')->value('faq_email'),
+                Button::create('How to delete my account')->value('faq_delete'),
+                Button::create('How to book a service')->value('faq_book'),
+                Button::create('What are the payment methods?')->value('faq_payment'),
+                Button::create('How to view order history')->value('faq_history'),
+                Button::create('What is MCU & Travel?')->value('faq_mcu'),
+                Button::create('How to cancel a booking')->value('faq_cancel'),
             ]);
 
         $bot->reply($question);
     });
 
-    // Blok ini berisi semua pasangan Pertanyaan (dari tombol) dan Jawaban (dari bot).
-    // Setiap `hears` akan memanggil fungsi `faqAnswer` untuk menciptakan alur chat yang diinginkan.
-    $botman->hears('faq_daftar', fn($bot) => faqAnswer($bot, 'Bagaimana cara daftar akun?', 'Klik tombol “Daftar” di halaman utama, lalu lengkapi data diri seperti nama lengkap, email, dan password.'));
-    $botman->hears('faq_lupa', fn($bot) => faqAnswer($bot, 'Lupa password akun', 'Klik “Lupa Kata Sandi?” di halaman login, lalu ikuti petunjuk reset.'));
-    $botman->hears('faq_email', fn($bot) => faqAnswer($bot, 'Cara ubah email', 'Masuk ke halaman profil > ubah email di bagian pengaturan akun.'));
-    $botman->hears('faq_hapus', fn($bot) => faqAnswer($bot, 'Cara hapus akun', 'Silakan hubungi admin melalui menu “Hubungi Kami” untuk menghapus akun Anda.'));
-    $botman->hears('faq_pesan', fn($bot) => faqAnswer($bot, 'Cara pesan layanan', 'Pilih layanan > Booking > Pilih tanggal > Lanjut pembayaran.'));
-    $botman->hears('faq_bayar', fn($bot) => faqAnswer($bot, 'Metode pembayaran?', 'Kami mendukung BCA, Dana, ShopeePay, QRIS, dan metode pembayaran digital lainnya.'));
-    $botman->hears('faq_riwayat', fn($bot) => faqAnswer($bot, 'Lihat riwayat pesanan', 'Masuk ke akun Anda lalu buka menu “Riwayat Pemesanan”.'));
-    $botman->hears('faq_mcu', fn($bot) => faqAnswer($bot, 'Apa itu MCU & Wisata?', 'Layanan gabungan Medical Check-Up dan rekreasi di lokasi wisata.'));
-    $botman->hears('faq_batal', fn($bot) => faqAnswer($bot, 'Cara membatalkan pesanan', 'Pesanan yang belum dibayar dapat dibatalkan di menu “Riwayat Pesanan”.'));
+    // This block maps each question (button value) to an appropriate answer.
+    // Each `hears` triggers `faqAnswer` to create the desired chat flow.
+    $botman->hears('faq_register', fn($bot) => faqAnswer($bot, 'How to register an account?', 'Click the “Register” button on the homepage and fill in your full name, email, and password.'));
+    $botman->hears('faq_forgot', fn($bot) => faqAnswer($bot, 'Forgot account password', 'Click “Forgot Password?” on the login page and follow the reset instructions.'));
+    $botman->hears('faq_email', fn($bot) => faqAnswer($bot, 'How to change email', 'Go to your profile page > update email in account settings.'));
+    $botman->hears('faq_delete', fn($bot) => faqAnswer($bot, 'How to delete my account', 'Please contact the admin through the “Contact Us” menu to request account deletion.'));
+    $botman->hears('faq_book', fn($bot) => faqAnswer($bot, 'How to book a service', 'Select a service > Book > Choose date > Proceed to payment.'));
+    $botman->hears('faq_payment', fn($bot) => faqAnswer($bot, 'What are the payment methods?', 'We accept BCA, Dana, ShopeePay, QRIS, and other digital payment options.'));
+    $botman->hears('faq_history', fn($bot) => faqAnswer($bot, 'How to view order history', 'Log in to your account and go to the “Order History” menu.'));
+    $botman->hears('faq_mcu', fn($bot) => faqAnswer($bot, 'What is MCU & Travel?', 'A combined service of Medical Check-Up and recreational tour at tourist locations.'));
+    $botman->hears('faq_cancel', fn($bot) => faqAnswer($bot, 'How to cancel a booking', 'Unpaid bookings can be canceled from the “Order History” menu.'));
 
-    // Fallback jika bot tidak mengerti.
-    $botman->fallback(fn($bot) => $bot->reply('Maaf, saya belum paham. Ketik "faq" untuk lihat pertanyaan umum.'));
+    // Fallback if the bot doesn't understand the input.
+    $botman->fallback(fn($bot) => $bot->reply('Sorry, I didn’t understand. Type "faq" to see common questions.'));
 
     $botman->listen();
 });
+
 
     Route::post('/submit-registration', [RegistrationController::class, 'store'])->name('submit-registration');
 
@@ -315,3 +320,36 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.user.delete');
 
 });
+
+Route::post('/invoice/pay/{id}', [MidtransController::class, 'bayar'])->name('invoice.pay');
+Route::post('/midtrans/notification', [MidtransController::class, 'notificationHandler']);
+// Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification']);
+// Route::post('/midtrans/notification', [MidtransController::class, 'handleMidtransWebhook']);
+// Route::post('/midtrans/webhook', [MidtransController::class, 'notificationHandler']);
+Route::post('/midtrans/notification', [InvoiceController::class, 'handleNotification']);
+
+Route::post('/midtrans/notification', [\App\Http\Controllers\InvoiceController::class, 'handleNotification']);
+Route::post('api/midtrans/notification', [MidtransController::class, 'handleNotification']);
+Route::get('/midtrans/finish', [MidtransController::class, 'finish']);
+
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::post('/testimoni', [TestimoniController::class, 'store'])->middleware('auth')->name('testimoni.store');
+
+Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('/admin/testimoni', [App\Http\Controllers\Admin\TestimoniController::class, 'index'])->name('admin.testimoni.index');
+    Route::post('/admin/testimoni/{id}/toggle', [App\Http\Controllers\Admin\TestimoniController::class, 'toggleActive'])->name('admin.testimoni.toggle');
+    Route::delete('/admin/testimoni/{id}', [App\Http\Controllers\Admin\TestimoniController::class, 'destroy'])->name('admin.testimoni.destroy');
+});
+
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/testimoni', [AdminTestimoniController::class, 'index'])->name('admin.testimoni.index');
+    Route::post('/testimoni/{id}/toggle', [AdminTestimoniController::class, 'toggle'])->name('admin.testimoni.toggle');
+    Route::delete('/testimoni/{id}', [AdminTestimoniController::class, 'destroy'])->name('admin.testimoni.destroy');
+});
+
+
+
+Route::post('/admin/testimoni/toggle/{id}', [AdminTestimoniController::class, 'toggle'])->name('admin.testimoni.toggle');
+

@@ -63,6 +63,7 @@
             <a href="{{ route('rumahsakit.index') }}">Rumah Sakit</a>
             <a href="{{ route('paket.index') }}">Paket</a>
             <a href="{{ route('user.index') }}">Users</a>
+            <a href="{{ route('admin.testimoni.index') }}">Testimoni</a>
         </div>
     </div>
 

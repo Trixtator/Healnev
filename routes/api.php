@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\MidtransController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,3 +20,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/paket/{paket}/check-quota', [OrderController::class, 'checkQuota'])->name('api.quota.check');
+// Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification']);
+Route::post('/midtrans/notification', [MidtransController::class, 'notificationHandler']);
+Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification']);
+Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification']);
+Route::get('/midtrans/finish', [MidtransController::class, 'finish']);

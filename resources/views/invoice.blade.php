@@ -41,7 +41,7 @@
                                     </tr>
                                     <tr>
                                         <td>Harga</td>
-                                        <td class="fw-bold text-success">: {{ $order->formatted_total_price }}</td>
+                                        <td class="fw-bold text-success">: {{ number_format($order->total_price, 0, ',', '.') }}</td>
                                     </tr>
                                     @if($order->paid_at)
                                     <tr>

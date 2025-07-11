@@ -20,8 +20,21 @@
 
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <!-- Font Awesome CDN (v6.x) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+
+    <!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
 </head>
 
 <body id="top">
@@ -121,9 +134,6 @@
                                     target="_blank" rel="noopener noreferrer" class="social-link whatsapp">
                                     <i class="icofont-whatsapp"></i>
                                 </a>
-                                <!-- <a href="#" class="social-link youtube">
-                                    <i class="icofont-youtube-play"></i>
-                                </a> -->
                             </div>
                         </div>
                     </div>
@@ -166,7 +176,7 @@
                                         <i class="icofont-location-pin"></i>
                                     </div>
                                     <div class="contact-text">
-                                        <p>Jl. Laksda Adisucipto No.32-34 Yogyakarta, Indonesia</p>
+                                        <p>Jl. Siliwangi No.63, Sleman, Daerah Istimewa Yogyakarta</p>
                                     </div>
                                 </div>
                                 <div class="contact-item">
@@ -174,7 +184,7 @@
                                         <i class="icofont-phone"></i>
                                     </div>
                                     <div class="contact-text">
-                                        <p>+6281222071884</p>
+                                        <p>+62 812-2207-1884</p>
                                     </div>
                                 </div>
                                 <div class="contact-item">
@@ -230,9 +240,13 @@
     <!-- Botman Widget -->
     <script>
         var botmanWidget = {
-            title: 'Health Nav',
+            title: 'HealthNav Bot',
             aboutText: 'FAQ Bot',
-            introMessage: "👋 Hai! Ketik 'faq' untuk melihat pertanyaan umum."
+            introMessage: "Hi there! 👋 Just type faq to see a list of frequently asked questions you can choose from. ",
+        //     mainColor: '#0A76A4',
+        // bubbleBackground: '#0A76A4',
+        bubbleAvatarUrl: 'https://cdn-icons-png.flaticon.com/512/4712/4712035.png',
+            
         };
     </script>
     <script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>

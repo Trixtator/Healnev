@@ -267,6 +267,7 @@
 
     .btn-secondary:hover {
         background: var(--light-gray);
+        color: black;
     }
 
     .btn-submit {
@@ -499,7 +500,7 @@
 <div class="profile-edit-container">
     <div class="profile-card">
         <div class="profile-header">
-            <h1>✨ Edit Profile</h1>
+            <h1>Edit Profile</h1>
         </div>
 
         <div class="profile-photo-section">

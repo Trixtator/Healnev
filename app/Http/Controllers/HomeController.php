@@ -3,36 +3,33 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Testimoni;
 use App\Models\Paket; // Pastikan model di-import
 
 class HomeController extends Controller
 {
-     public function index()
+    public function index()
     {
-        // 1. Ambil HANYA 8 paket terbaru untuk ditampilkan di homepage
-        // Diurutkan berdasarkan yang paling baru dibuat
+        // 1. Kumpulkan SEMUA data yang dibutuhkan
+        $testimonis = Testimoni::where('is_active', 1)->with('user')->latest()->get();
         $latestPakets = Paket::with('rumahsakit')->latest()->limit(8)->get();
-
-        // 2. Hitung jumlah TOTAL semua paket yang ada di database
-        // Ini untuk logika menampilkan tombol "View More"
         $totalPaketCount = Paket::count();
 
-        // 3. Kirim kedua variabel tersebut ke view 'index.blade.php'
+        // 2. Kirim SEMUA data ke view dalam satu kali return
         return view('index', [
-            'pakets' => $latestPakets,
-            'totalPakets' => $totalPaketCount
+            'testimonis' => $testimonis,      // Data testimoni
+            'pakets' => $latestPakets,         // Data paket
+            'totalPakets' => $totalPaketCount  // Jumlah total paket
         ]);
     }
 
-    // TAMBAHKAN METHOD INI
+    // METHOD INI SUDAH BENAR
     public function detailPaket($id)
     {
-        // 1. Cari paket di database berdasarkan ID yang dikirim dari URL.
-        //    findOrFail() akan otomatis menampilkan halaman 404 Not Found jika ID tidak ada.
+        // Cari paket di database berdasarkan ID
         $paket = Paket::with('rumahsakit')->findOrFail($id);
 
-        // 2. Kirim data satu paket tersebut ke sebuah view baru.
-        //    Kita akan membuat view bernama 'detail-paket.blade.php'
+        // Kirim data satu paket tersebut ke view 'detail-paket'
         return view('detail-paket', compact('paket'));
     }
 }

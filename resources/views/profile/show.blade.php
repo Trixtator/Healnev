@@ -143,10 +143,10 @@
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ ($index + 1) * 100 }}">
                     <div class="order-card" data-status="{{ $order->payment_status }}" data-price="{{ $order->total_price }}" data-date="{{ $order->created_at->timestamp }}">
                         <!-- Status Badge -->
-                        <div class="status-badge status-{{ $order->payment_status }}">
-                            <i class="fas fa-{{ $order->payment_status === 'paid' ? 'check-circle' : ($order->payment_status === 'pending' ? 'clock' : 'times-circle') }}"></i>
-                            <span>{{ ucfirst($order->payment_status) }}</span>
-                        </div>
+                        <div class="ribbon {{ $order->payment_status !== 'paid' ? 'ribbon-unpaid' : 'ribbon-paid' }}">
+        <span>{{ strtoupper($order->payment_status) }}</span>
+    </div>
+
 
                         <!-- Order Header -->
                         <div class="order-header">
@@ -265,7 +265,7 @@
                 <h4>Start Your Health Journey</h4>
                 <p>You haven't made any bookings yet. Explore our premium medical tourism packages and begin your path to better health.</p>
 
-                <div class="empty-actions">
+                <!-- <div class="empty-actions">
                     <a href="{{ route('packages') }}" class="btn btn-primary btn-lg">
                         <i class="fas fa-plus-circle me-2"></i>
                         Browse Packages
@@ -274,9 +274,9 @@
                         <i class="fas fa-info-circle me-2"></i>
                         Learn More
                     </a>
-                </div>
+                </div> -->
 
-                <div class="empty-features">
+                <!-- <div class="empty-features">
                     <div class="feature-item">
                         <i class="fas fa-shield-alt"></i>
                         <span>Safe & Secure</span>
@@ -289,7 +289,7 @@
                         <i class="fas fa-headset"></i>
                         <span>24/7 Support</span>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         @endif
@@ -653,6 +653,46 @@
         box-shadow: var(--shadow-lg);
     }
 
+    .ribbon {
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 99;
+}
+
+.ribbon span {
+    position: absolute;
+    display: block;
+    width: 180px;
+    padding: 4px 0;
+    background-color: #28a745; /* default: green */
+    color: #fff;
+    text-align: center;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transform: rotate(45deg);
+    top: 18px;                 /* naik sedikit agar seimbang */
+    right: -40px;             /* geser kiri agar teks di tengah */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    letter-spacing: 0.5px;
+    line-height: 2
+}
+
+
+/* Warna Berdasarkan Status */
+.ribbon-paid span {
+    background-color: #28a745;
+}
+
+.ribbon-unpaid span {
+    background-color: #dc3545;
+}
+
+
     /* Status Badge */
     .status-badge {
         position: absolute;
@@ -727,9 +767,9 @@
         transition: var(--transition);
     }
 
-    .order-card:hover .package-image img {
+    /* .order-card:hover .package-image img {
         transform: scale(1.1);
-    }
+    } */
 
     .image-placeholder {
         width: 100%;
@@ -758,9 +798,9 @@
         transition: var(--transition);
     }
 
-    .order-card:hover .image-overlay {
+    /* .order-card:hover .image-overlay {
         opacity: 1;
-    }
+    } */
 
     .package-title {
         font-size: 1.3rem;

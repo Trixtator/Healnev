@@ -13,7 +13,10 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         //
-        '/midtrans/notification',
+        // 'https://041b-117-20-60-69.ngrok-free.app/midtrans/notification',
         '/botman',
+        '/midtrans/notification',
+        'api/midtrans/webhook',
+
     ];
 }

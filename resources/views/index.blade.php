@@ -143,121 +143,231 @@
     </div>
 </section>
 
-<!-- Enhanced Testimonials Section -->
-<section class="testimonials-section">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center mb-5">
-                <div class="section-header" data-aos="fade-up">
-                    <span class="section-subtitle">Patient Stories</span>
-                    <h2 class="section-title">What Our Patients Say</h2>
-                </div>
-            </div>
+<section class="testimonials-section py-5 bg-white">
+    <div class="container-fluid px-2">
+        <div class="row mb-4 text-center">
+            <h2 class="section-title">What Our Patients Say</h2>
         </div>
 
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p class="testimonial-text">
-                            "HealthNav transformed my medical journey into an incredible experience.
-                            The combination of world-class healthcare and beautiful Indonesian culture
-                            made my recovery both effective and memorable."
-                        </p>
-                    </div>
-                    <div class="testimonial-author">
-                        <img src="assets/images/team/rara.jpg" alt="Dara Amanda" class="author-avatar">
-                        <div class="author-info">
-                            <h6 class="author-name">Dara Amanda</h6>
-                            <span class="author-location">Lampung, Indonesia</span>
+        <div class="scroll-wrapper">
+            <div class="scroll-container d-flex">
+                @forelse($testimonis as $testimoni)
+                    <div class="card testimoni-card shadow-sm text-center border-0 rounded-4">
+                        <div class="quote-icon text-primary fs-1 mb-3">
+                            <i class="fas fa-quote-left"></i>
                         </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p class="testimonial-text">
-                            "Exceptional service from start to finish! The medical team was incredibly
-                            professional, and the tourism aspect allowed me to explore Indonesia's
-                            beauty while focusing on my health."
+                        <img src="{{ $testimoni->user->profile_photo ?? 'https://ui-avatars.com/api/?name=' . urlencode($testimoni->user->name) }}"
+                             class="rounded-circle mx-auto mb-3" width="80" height="80" style="object-fit: cover;">
+
+                        <p class="mb-3 text-muted px-3">
+                            {{ $testimoni->message }}
                         </p>
-                    </div>
-                    <div class="testimonial-author">
-                        <img src="assets/images/team/iqbaal.jpg" alt="Iqbaal Ramadhan" class="author-avatar">
-                        <div class="author-info">
-                            <h6 class="author-name">Iqbaal Ramadhan</h6>
-                            <span class="author-location">Sleman, Indonesia</span>
+
+                        <div class="mb-2">
+                            @for ($i = 0; $i < $testimoni->rating; $i++)
+                                <i class="fas fa-star text-warning"></i>
+                            @endfor
+                            @for ($i = $testimoni->rating; $i < 5; $i++)
+                                <i class="fas fa-star text-muted"></i>
+                            @endfor
                         </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p class="testimonial-text">
-                            "The perfect blend of medical excellence and cultural immersion.
-                            HealthNav made my treatment journey comfortable, safe, and truly
-                            enriching. Highly recommended!"
-                        </p>
+                        <h6 class="fw-bold mb-0">{{ $testimoni->user->name }}</h6>
                     </div>
-                    <div class="testimonial-author">
-                        <img src="assets/images/team/kikow.jpg" alt="Kikoww" class="author-avatar">
-                        <div class="author-info">
-                            <h6 class="author-name">Kikoww</h6>
-                            <span class="author-location">Gresik, Indonesia</span>
-                        </div>
+                @empty
+                    <div class="text-center w-100">
+                        <p class="text-muted">No testimonials yet.</p>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Minimalist Share Experience Form -->
-        <div class="row mt-5">
-            <div class="col-lg-8 mx-auto">
-                <div class="experience-form-section" data-aos="fade-up" data-aos-delay="400">
-                    <div class="form-header text-center mb-4">
-                        <h3 class="form-title">Share Your HealthNav Experience</h3>
-                        <p class="form-subtitle">Your story could inspire others to take their health journey with confidence</p>
-                    </div>
-
-                    <div class="experience-form-card">
-                        <form id="experienceForm" class="experience-form">
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <input type="text" class="form-control" id="name" placeholder="Full Name" required>
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="text" class="form-control" id="location" placeholder="Your Location" required>
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="file" class="form-control" id="photo" accept="image/*" placeholder="Photo (Optional)">
-                                </div>
-                            </div>
-
-                            <div class="form-group mt-3">
-                                <textarea class="form-control" id="message" rows="4"
-                                    placeholder="Share your experience with HealthNav..." required></textarea>
-                                <div class="character-count">
-                                    <span id="charCount">0</span>/300 characters
-                                </div>
-                            </div>
-
-                            <div class="text-center mt-4">
-                                <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-paper-plane me-2"></i>
-                                    Submit Your Story
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </div>
 </section>
+
+<style>
+     .scroll-wrapper {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    padding: 0 0.5rem; /* agar sisi kiri-kanan mepet tapi masih ada ruang sedikit */
+}
+
+.scroll-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-container {
+    display: flex;
+    gap: 20px;
+    width: max-content;
+    padding-bottom: 1rem;
+}
+
+
+    .testimoni-card {
+        scroll-snap-align: start;
+        width: 400px;
+        flex-shrink: 0;
+        background-color: #f9fafb;
+        transition: all 0.3s ease-in-out;
+        padding: 2rem 1rem;
+        border-radius: 1rem;
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    }
+
+    .testimoni-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+    }
+
+    .testimoni-card .quote-icon i {
+        transition: transform 0.3s ease;
+    }
+
+    .testimoni-card:hover .quote-icon i {
+        transform: scale(1.1) rotate(-5deg);
+    }
+
+    .testimoni-card p {
+        font-size: 0.95rem;
+        color: #555;
+    }
+
+    .testimoni-card h6 {
+        font-size: 1rem;
+        color: #222;
+    }
+
+    @media (max-width: 768px) {
+        .testimoni-card {
+            width: 280px;
+        }
+    }
+</style>
+
+
+
+
+
+@auth
+<div class="testimonial-container container mt-5 mb-5" style="max-width: 600px;">
+    <h4 class="text-center mb-4"><strong>Write Your Testimonial</strong></h4>
+
+    <form action="{{ route('testimoni.store') }}" method="POST">
+        @csrf
+
+        {{-- Star Rating --}}
+        <div class="mb-3 text-center">
+            <label class="form-label d-block"><strong>Your Rating</strong></label>
+            <div id="star-container">
+                @for($i = 1; $i <= 5; $i++)
+                    <i class="fa-star fa-regular fa-2x mx-1 star" data-value="{{ $i }}"></i>
+                @endfor
+            </div>
+            <input type="hidden" name="rating" id="rating" required>
+        </div>
+
+        {{-- Message --}}
+        <div class="mb-3">
+            <label for="message" class="form-label"><strong>Your Message</strong></label>
+            <textarea name="message" id="message" rows="4" class="form-control"
+                placeholder="Write your testimonial..." maxlength="100" required></textarea>
+            <small class="text-muted d-block text-end mt-1"><span id="char-count">0</span>/100</small>
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary px-4 py-2" style="border-radius: 25px;">Submit Testimonial</button>
+        </div>
+    </form>
+</div>
+
+{{-- SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: '{{ session('success') }}',
+        confirmButtonColor: '#3085d6',
+        timer: 3000
+    });
+</script>
+@endif
+
+{{-- Character counter --}}
+<script>
+    const textarea = document.getElementById('message');
+    const charCount = document.getElementById('char-count');
+
+    textarea.addEventListener('input', () => {
+        charCount.textContent = textarea.value.length;
+    });
+</script>
+
+{{-- Star Rating --}}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('rating');
+
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => {
+                const ratingValue = index + 1;
+                ratingInput.value = ratingValue;
+
+                stars.forEach((s, i) => {
+                    s.classList.remove('fa-solid');
+                    s.classList.add('fa-regular');
+                    if (i < ratingValue) {
+                        s.classList.add('fa-solid');
+                        s.classList.remove('fa-regular');
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+<style>
+    .star {
+        cursor: pointer;
+        color: #ccc;
+        transition: color 0.3s ease;
+    }
+
+    .star.fa-solid {
+        color: #00BFFF !important;
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        padding: 12px;
+        font-size: 15px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+
+    .testimonial-container {
+        padding-bottom: 80px;
+    }
+</style>
+@else
+<div class="container text-center mt-4">
+    <p>Want to leave a testimonial? <a href="{{ route('login') }}">Login first</a>.</p>
+</div>
+@endauth
+
+
+
+
 
 <!-- Minimalist Styles -->
 <style>
