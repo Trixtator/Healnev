@@ -1,7 +1,5 @@
 <?php
 
-// File: app/Models/Order.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,14 +17,25 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'paket_id',
-        'hospital_id', // <-- Tambahkan
+        'hospital_id',
         'order_code',
         'booking_date',
-        'booking_time', // <-- Tambahkan
+        'booking_time',
         'total_price',
-        'payment_method', // <-- Tambahkan
+        'payment_method',
         'payment_status',
         'snap_token',
+        'paid_at', // Tambahkan ini
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'booking_date' => 'date',
+        'paid_at' => 'datetime', // Tambahkan ini
     ];
 
     public function paket()
