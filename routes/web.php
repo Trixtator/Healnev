@@ -262,7 +262,7 @@ Route::get('/pesan/{id}', [PemesananController::class, 'form'])->name('pemesanan
 Route::post('/pesan', [PemesananController::class, 'proses'])->name('pemesanan.proses');
 
 Route::get('/bayar/{id}', [MidtransController::class, 'bayar'])->name('bayar.midtrans');
-// Route::post('/midtrans/callback', [MidtransController::class, 'callback']);
+Route::post('/midtrans/callback', [MidtransController::class, 'callback']);
 
 Route::get('/paket/{id}', [PemesananController::class, 'form'])->name('pemesanan.form');
 Route::post('/pemesanan/proses', [PemesananController::class, 'proses'])->name('pemesanan.proses');
