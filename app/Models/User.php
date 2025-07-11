@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-// ... use statements ...
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-// use Laravel\Sanctum\HasApiTokens; // Jika menggunakan Sanctum
+use Laravel\Sanctum\HasApiTokens; // Assuming you use Sanctum
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable; // Tambahkan HasApiTokens jika pakai Sanctum
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -21,11 +20,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'passport_name',    // Jika ada field ini
-        'address',          // Jika ada field ini
-        'birth_date',       // Jika ada field ini
-        'profile_picture',  // << PASTIKAN INI ADA
-        // tambahkan field lain yang ingin bisa diisi secara massal
+        'passport_name',
+        'address',
+        'birth_date',
+        'phone',
+        'profile_picture', // This is correctly added
     ];
 
     /**
@@ -45,12 +44,15 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed', // Otomatis hash jika menggunakan Laravel 9+
-        'birth_date' => 'date',  // Jika birth_date adalah tipe date
+        'password' => 'hashed', // For Laravel 9+
+        'birth_date' => 'date',
     ];
-    public function orders()
-{
-    return $this->hasMany(Order::class);
-}
 
+    /**
+     * Get the orders for the user.
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
