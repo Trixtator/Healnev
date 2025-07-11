@@ -356,10 +356,3 @@ Route::middleware('auth')->group(function () {
     Route::post('/invoice/{id}/pay', [InvoiceController::class, 'pay'])->name('invoice.pay');
     Route::get('/invoice/{order}/download', [InvoiceController::class, 'download'])->name('invoice.download');
 });
-
-// routes/web.php
-Route::middleware(['auth'])->group(function () {
-    Route::get('/profil', [ProfileController::class, 'show'])->name('profile.show');
-    Route::get('/profil/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::post('/profil/update', [ProfileController::class, 'update'])->name('profile.update');
-});
