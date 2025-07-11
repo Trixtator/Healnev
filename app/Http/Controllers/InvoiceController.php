@@ -22,21 +22,21 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Menampilkan halaman invoice HTML
+     * Tampilkan halaman invoice.
      */
     public function show(Order $order)
     {
         if (auth()->id() !== $order->user_id) {
-            abort(403, 'Anda tidak memiliki akses ke invoice ini.');
+            abort(403, 'Akses ditolak.');
         }
 
-        return view('invoice', ['order' => $order]);
+        return view('invoice', compact('order'));
     }
 
     /**
-     * Proses pembayaran dan kirim Snap Token
+     * Handle pembayaran dan kirim Snap Token (POST)
      */
-    public function pay($id)
+    public function pay(Request $request, $id)
     {
         $order = Order::findOrFail($id);
 
@@ -47,32 +47,32 @@ class InvoiceController extends Controller
         try {
             $uniqueOrderId = $order->order_code . '-' . time();
 
-            $midtransParams = [
+            $params = [
                 'transaction_details' => [
                     'order_id' => $uniqueOrderId,
                     'gross_amount' => $order->total_price,
                 ],
                 'customer_details' => [
-                    'first_name' => auth()->user()->name,
-                    'email' => auth()->user()->email,
-                ],
+                    'first_name' => $request->user()->name,
+                    'email' => $request->user()->email,
+                ]
             ];
 
-            $snapToken = Snap::getSnapToken($midtransParams);
+            $snapToken = Snap::getSnapToken($params);
 
             return response()->json(['snap_token' => $snapToken]);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal membuat sesi pembayaran: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Gagal memproses pembayaran: ' . $e->getMessage()], 500);
         }
     }
 
     /**
-     * Unduh invoice dalam format PDF
+     * Unduh invoice PDF
      */
     public function download(Order $order)
     {
         if (auth()->id() !== $order->user_id) {
-            abort(403, 'Akses ditolak');
+            abort(403);
         }
 
         $pdf = Pdf::loadView('invoices.pdf', compact('order'));
@@ -80,7 +80,7 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Terima notifikasi webhook dari Midtrans
+     * Handle Webhook dari Midtrans
      */
     public function handleNotification(Request $request)
     {
@@ -88,18 +88,22 @@ class InvoiceController extends Controller
             $notification = new Notification();
 
             $fullOrderId = $notification->order_id;
-            $orderId = explode('-', $fullOrderId)[0]; // Ambil bagian order_code saja
+            $orderCode = explode('-', $fullOrderId)[0];
 
-            $transaction = $notification->transaction_status;
-
-            $order = Order::where('order_code', $orderId)->first();
+            $order = Order::where('order_code', $orderCode)->first();
 
             if (!$order) {
                 return response()->json(['message' => 'Order tidak ditemukan'], 404);
             }
 
+            $transaction = $notification->transaction_status;
+            $paymentType = $notification->payment_type;
+            $settlementTime = $notification->settlement_time ?? now();
+
             if (in_array($transaction, ['capture', 'settlement'])) {
                 $order->payment_status = 'paid';
+                $order->payment_method = $paymentType;
+                $order->paid_at = $settlementTime;
                 $order->save();
 
                 Mail::to($order->user->email)->send(new InvoicePaid($order));
@@ -108,7 +112,7 @@ class InvoiceController extends Controller
                 $order->save();
             }
 
-            return response()->json(['message' => 'Notifikasi diproses']);
+            return response()->json(['message' => 'Notifikasi berhasil diproses']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

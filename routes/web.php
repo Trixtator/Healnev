@@ -323,13 +323,11 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
 Route::post('/invoice/pay/{id}', [MidtransController::class, 'bayar'])->name('invoice.pay');
 Route::post('/midtrans/notification', [MidtransController::class, 'notificationHandler']);
-// Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification']);
-// Route::post('/midtrans/notification', [MidtransController::class, 'handleMidtransWebhook']);
-// Route::post('/midtrans/webhook', [MidtransController::class, 'notificationHandler']);
+
 Route::post('/midtrans/notification', [InvoiceController::class, 'handleNotification']);
 
 Route::post('/midtrans/notification', [\App\Http\Controllers\InvoiceController::class, 'handleNotification']);
-Route::post('api/midtrans/notification', [MidtransController::class, 'handleNotification']);
+// Route::post('api/midtrans/notification', [MidtransController::class, 'handleNotification']);
 Route::get('/midtrans/finish', [MidtransController::class, 'finish']);
 
 
@@ -353,3 +351,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
 Route::post('/admin/testimoni/toggle/{id}', [AdminTestimoniController::class, 'toggle'])->name('admin.testimoni.toggle');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/invoice/{order}', [InvoiceController::class, 'show'])->name('invoice.show');
+    Route::post('/invoice/{id}/pay', [InvoiceController::class, 'pay'])->name('invoice.pay');
+    Route::get('/invoice/{order}/download', [InvoiceController::class, 'download'])->name('invoice.download');
+});
