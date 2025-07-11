@@ -30,7 +30,7 @@ use App\Http\Controllers\Admin\TestimoniController as AdminTestimoniController;
 
 
 
-
+Route::get('/invoice/{id}/status', [InvoiceController::class, 'checkStatus'])->name('invoice.status');
 
 
 
