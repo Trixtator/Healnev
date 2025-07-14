@@ -350,5 +350,3 @@ Route::middleware('auth')->group(function () {
     Route::post('/invoice/{id}/pay', [InvoiceController::class, 'pay'])->name('invoice.pay');
     Route::get('/invoice/{order}/download', [InvoiceController::class, 'download'])->name('invoice.download');
 });
-
-Web.php
