@@ -21,7 +21,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <h5>Detail Pesanan</h5>
+                                <h5>Order Details</h5>
                                 <table class="table table-borderless">
                                     <tr>
                                         <td style="width: 160px;">Nama Paket</td>
