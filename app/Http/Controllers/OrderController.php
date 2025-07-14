@@ -216,18 +216,12 @@ class OrderController extends Controller
         }
     }
 
-    public function showInvoice(Order $order)
-    {
-        // Pastikan order ini milik user yang sedang login
-        if ($order->user_id !== Auth::id()) {
-            abort(403, 'AKSES DITOLAK');
-        }
+    public function showInvoice($id)
+{
+    $order = Order::with('paket')->findOrFail($id); // ambil data order dan relasi paket
+    return view('detail-paket', compact('order'));  // <-- variabel dikirim ke view
+}
 
-        // Muat relasi paket agar bisa ditampilkan di view
-        $order->load('paket', 'paket.rumahsakit');
-
-        return view('invoice', compact('order')); // Kita akan buat file view 'invoice.blade.php'
-    }
 
     public function processDummyPayment(Request $request, Order $order)
     {
