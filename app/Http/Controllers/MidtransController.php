@@ -52,48 +52,61 @@ class MidtransController extends Controller
     }
 
    public function handleNotification(Request $request)
-{
-    // Konfigurasi Midtrans
-    \Midtrans\Config::$serverKey = config('services.midtrans.server_key');
-    \Midtrans\Config::$isProduction = config('services.midtrans.is_production');
-    \Midtrans\Config::$isSanitized = true;
-    \Midtrans\Config::$is3ds = true;
+    {
+        // Ambil raw input dari Midtrans
+        $rawBody = $request->getContent();
+        if (empty($rawBody)) {
+            Log::error('⚠ Midtrans notification: Empty payload');
+            return response()->json(['message' => 'Empty payload'], 400);
+        }
 
-    // Ambil raw input
-    $rawBody = file_get_contents('php://input');
-    if (empty($rawBody)) {
-        \Log::error('⚠️ Midtrans notification: Empty payload');
-        return response()->json(['message' => 'Empty payload'], 400);
+        // Decode payload
+        $payload = json_decode($rawBody);
+        if (!$payload || !isset($payload->order_id) || !isset($payload->transaction_status)) {
+            Log::error('⚠ Midtrans notification: Invalid JSON or missing data', ['body' => $rawBody]);
+            return response()->json(['message' => 'Invalid data'], 400);
+        }
+
+        // Ekstrak order_code dari order_id Midtrans (misal: "ORD-123-1678886400" -> "ORD-123")
+        $orderCode = explode('-', $payload->order_id)[0];
+        $order = Order::where('order_code', $orderCode)->first();
+
+        if (!$order) {
+            Log::error("❌ Order not found for order_code: " . $orderCode);
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        // Periksa apakah status sudah 'paid' untuk menghindari pemrosesan ganda
+        if ($order->payment_status === 'paid') {
+            Log::info("ℹ Order " . $orderCode . " already paid. Skipping update.");
+            return response()->json(['message' => 'Order already paid']);
+        }
+
+        $transactionStatus = $payload->transaction_status;
+        $fraudStatus = $payload->fraud_status ?? null;
+
+        // Logika update status berdasarkan notifikasi
+        if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
+            // Untuk kartu kredit, status 'capture' berarti pembayaran berhasil
+            // Untuk metode lain, 'settlement' berarti dana sudah diterima
+            if ($fraudStatus == 'accept' || $fraudStatus == null) {
+                $order->payment_status = 'paid';
+                $order->payment_method = $payload->payment_type ?? 'N/A';
+                $order->paid_at = $payload->settlement_time ?? now();
+                $order->save();
+
+                Log::info("✅ Payment success for order: " . $orderCode);
+                // Kirim email notifikasi ke pelanggan
+                Mail::to($order->user->email)->send(new InvoicePaid($order));
+            }
+        } elseif (in_array($transactionStatus, ['expire', 'cancel', 'deny'])) {
+            $order->payment_status = 'failed';
+            $order->save();
+            Log::warning("🔻 Payment " . $transactionStatus . " for order: " . $orderCode);
+        }
+
+        return response()->json(['message' => 'Notification processed successfully']);
     }
-
-    // Decode payload
-    $payload = json_decode($rawBody);
-    if (!$payload || !isset($payload->transaction_status)) {
-        \Log::error('⚠️ Midtrans notification: Invalid JSON or missing data', ['body' => $rawBody]);
-        return response()->json(['message' => 'Invalid data'], 400);
-    }
-
-    // Cek ID
-    $orderId = explode('-', $payload->order_id)[0];
-    $order = Order::where('order_code', $orderId)->first();
-    if (!$order) {
-        \Log::error("❌ Order not found for ID: " . $orderId);
-        return response()->json(['message' => 'Order not found'], 404);
-    }
-
-    // Update status
-    if (in_array($payload->transaction_status, ['capture', 'settlement'])) {
-        $order->payment_status = 'paid';
-        $order->save();
-        \Mail::to($order->user->email)->send(new \App\Mail\InvoicePaid($order));
-    } elseif (in_array($payload->transaction_status, ['expire', 'cancel'])) {
-        $order->payment_status = 'failed';
-        $order->save();
-    }
-
-    return response()->json(['message' => 'Notification processed']);
-}
-
 
 
     public function paymentSuccess(Request $request)

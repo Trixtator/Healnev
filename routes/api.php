@@ -20,7 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/paket/{paket}/check-quota', [OrderController::class, 'checkQuota'])->name('api.quota.check');
+<<<<<<< HEAD
 // Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification']);
 Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification']);
 Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification']);
+=======
+Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification'])->name('midtrans.notification');
+>>>>>>> af162f85b0ead4ae875514615846c3a05799e27c
 Route::get('/midtrans/finish', [MidtransController::class, 'finish']);

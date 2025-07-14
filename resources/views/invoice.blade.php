@@ -9,6 +9,7 @@
                     <div class="card-header bg-primary text-white">
                         <h4 class="mb-0">Invoice: {{ $order->order_code }}</h4>
                         <small>Status:
+<<<<<<< HEAD
                             @if($order->payment_status === 'paid')
                             <span class="badge bg-success">PAID</span>
                             @elseif($order->payment_status === 'pending')
@@ -16,6 +17,15 @@
                             @else
                             <span class="badge bg-danger">UNPAID</span>
                             @endif
+=======
+                        @if($order->payment_status === 'paid')
+                        <span class="badge bg-success">PAYMENT SUCCESSFUL</span>
+                        @elseif($order->payment_status === 'pending')
+                        <span class="badge bg-warning">AWAITING PAYMENT</span>
+                        @else
+                        <span class="badge bg-danger">NOT PAID</span>
+                        @endif
+>>>>>>> af162f85b0ead4ae875514615846c3a05799e27c
                         </small>
                     </div>
                     <div class="card-body">
@@ -81,6 +91,12 @@
                             <br><small>Method: {{ ucfirst($order->payment_method) }}</small>
                             @endif
                         </div>
+<<<<<<< HEAD
+=======
+                        <!-- <div class="text-center mt-3">
+                            <a href="{{ route('home') }}" class="btn btn-primary">Back to Home</a>
+                        </div> -->
+>>>>>>> af162f85b0ead4ae875514615846c3a05799e27c
                         @endif
                     </div>
                 </div>
@@ -105,6 +121,10 @@
                 payButton.disabled = true;
                 payButton.innerHTML = 'Processing...';
 
+<<<<<<< HEAD
+=======
+                // Show loading alert
+>>>>>>> af162f85b0ead4ae875514615846c3a05799e27c
                 Swal.fire({
                     title: 'Requesting Payment Session...',
                     text: 'Please wait a moment.',
@@ -114,6 +134,10 @@
                     }
                 });
 
+<<<<<<< HEAD
+=======
+                // AJAX request to backend for Snap Token
+>>>>>>> af162f85b0ead4ae875514615846c3a05799e27c
                 fetch('{{ route("invoice.pay", $order->id) }}', {
                         method: 'POST',
                         headers: {
@@ -123,12 +147,17 @@
                     })
                     .then(response => response.json())
                     .then(data => {
+<<<<<<< HEAD
                         Swal.close();
+=======
+                        Swal.close(); // Close loading alert
+>>>>>>> af162f85b0ead4ae875514615846c3a05799e27c
 
                         if (data.error) {
                             throw new Error(data.error);
                         }
 
+<<<<<<< HEAD
                         window.snap.pay(data.snap_token, {
                             onSuccess: function(result) {
                                 console.log('Payment success:', result);
@@ -141,6 +170,17 @@
                                 }).then(() => {
                                     window.location.reload();
                                 });
+=======
+                        // Use token to open Snap payment popup
+                        window.snap.pay(data.snap_token, {
+                            onSuccess: function(result) {
+                                console.log('Payment success:', result);
+
+                                // Wait then check status
+                                setTimeout(function() {
+                                    checkPaymentStatus();
+                                }, 2000);
+>>>>>>> af162f85b0ead4ae875514615846c3a05799e27c
                             },
                             onPending: function(result) {
                                 console.log('Payment pending:', result);
@@ -149,7 +189,9 @@
                                     title: 'Payment Pending',
                                     text: 'Please complete your payment.',
                                 }).then(() => {
-                                    window.location.reload();
+                                    setTimeout(function() {
+                                        checkPaymentStatus();
+                                    }, 2000);
                                 });
                             },
                             onError: function(result) {
@@ -157,7 +199,11 @@
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Payment Failed',
+<<<<<<< HEAD
                                     text: 'An error occurred while processing the payment.',
+=======
+                                    text: 'An error occurred during the payment process.',
+>>>>>>> af162f85b0ead4ae875514615846c3a05799e27c
                                 });
                                 resetButton();
                             },
@@ -171,6 +217,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
+<<<<<<< HEAD
                             text: error.message || 'Something went wrong. Please try again.',
                         });
                         resetButton();
@@ -181,7 +228,50 @@
                     payButton.disabled = false;
                     payButton.innerHTML = 'Pay Now';
                 }
+=======
+                            text: error.message || 'An error occurred. Please try again.',
+                        });
+                        resetButton();
+                    });
+>>>>>>> af162f85b0ead4ae875514615846c3a05799e27c
             });
+        }
+
+        // Function to check payment status
+        function checkPaymentStatus() {
+            fetch('{{ route("invoice.status", $order->id) }}', {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.payment_status === 'paid') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Payment Successful!',
+                        text: 'Thank you for your payment.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    // If not paid yet, retry check
+                    setTimeout(checkPaymentStatus, 3000);
+                }
+            })
+            .catch(error => {
+                console.log('Error checking status:', error);
+                window.location.reload();
+            });
+        }
+
+        function resetButton() {
+            isPaying = false;
+            payButton.disabled = false;
+            payButton.innerHTML = 'Pay Now';
         }
     });
 </script>
