@@ -56,28 +56,16 @@ class InvoiceController extends Controller
                     'gross_amount' => $order->total_price,
                 ],
                 'customer_details' => [
-<<<<<<< HEAD
                     'first_name' => $request->user()->name,
                     'email' => $request->user()->email,
                 ]
-=======
-                    'first_name' => auth()->user()->name,
-                    'email' => auth()->user()->email,
-                ],
-                'custom_field1' => $order->id, // Tambahkan order ID untuk memudahkan tracking
->>>>>>> af162f85b0ead4ae875514615846c3a05799e27c
             ];
 
             $snapToken = Snap::getSnapToken($params);
 
             return response()->json(['snap_token' => $snapToken]);
         } catch (\Exception $e) {
-<<<<<<< HEAD
             return response()->json(['error' => 'Gagal memproses pembayaran: ' . $e->getMessage()], 500);
-=======
-            Log::error('Midtrans payment error: ' . $e->getMessage());
-            return response()->json(['error' => 'Gagal membuat sesi pembayaran: ' . $e->getMessage()], 500);
->>>>>>> af162f85b0ead4ae875514615846c3a05799e27c
         }
     }
 
@@ -95,15 +83,10 @@ class InvoiceController extends Controller
     }
 
     /**
-<<<<<<< HEAD
      * Handle Webhook dari Midtrans
-=======
-     * Check payment status (untuk AJAX polling)
->>>>>>> af162f85b0ead4ae875514615846c3a05799e27c
      */
     public function checkStatus($id)
     {
-<<<<<<< HEAD
         try {
             $notification = new Notification();
 
@@ -135,12 +118,6 @@ class InvoiceController extends Controller
             return response()->json(['message' => 'Notifikasi berhasil diproses']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
-=======
-        $order = Order::findOrFail($id);
-        
-        if (auth()->id() !== $order->user_id) {
-            return response()->json(['error' => 'Unauthorized'], 403);
->>>>>>> af162f85b0ead4ae875514615846c3a05799e27c
         }
 
         return response()->json([

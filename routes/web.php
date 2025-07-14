@@ -351,13 +351,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
 
 Route::post('/admin/testimoni/toggle/{id}', [AdminTestimoniController::class, 'toggle'])->name('admin.testimoni.toggle');
-<<<<<<< HEAD
 
 Route::middleware('auth')->group(function () {
     Route::get('/invoice/{order}', [InvoiceController::class, 'show'])->name('invoice.show');
     Route::post('/invoice/{id}/pay', [InvoiceController::class, 'pay'])->name('invoice.pay');
     Route::get('/invoice/{order}/download', [InvoiceController::class, 'download'])->name('invoice.download');
 });
-=======
-~
->>>>>>> af162f85b0ead4ae875514615846c3a05799e27c
