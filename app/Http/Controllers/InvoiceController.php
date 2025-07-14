@@ -7,7 +7,6 @@ use App\Models\Order;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Midtrans\Config;
 use Midtrans\Snap;
-use Midtrans\Notification;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\InvoicePaid;
 use Illuminate\Support\Facades\Log;
