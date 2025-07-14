@@ -18,7 +18,6 @@
 <section class="section pt-5">
     <div class="container">
         <div class="row align-items-center">
-            {{-- Package information section --}}
             <div class="col-md-5 mb-4 mb-md-0">
                 <img src="{{ asset('storage/' . $paket->gambar) }}" alt="{{ $paket->nama_paket }}" class="img-fluid rounded" style="height: 300px; width: 100%; object-fit: cover;">
             </div>
@@ -30,16 +29,13 @@
 
                 <h3 class="text-warning fw-bold mb-3">Rp {{ number_format($paket->harga, 0, ',', '.') }}</h3>
 
-                {{-- Booking button logic --}}
                 @auth
-                    {{-- IF LOGGED IN: Show modal trigger --}}
-                    <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#orderModal">
+                    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#orderModal">
                         Book Now
                     </button>
                 @endauth
 
                 @guest
-                    {{-- IF GUEST: Link to login --}}
                     <a href="{{ route('login') }}" class="btn btn-primary mt-3">
                         Book Now
                     </a>
@@ -47,7 +43,6 @@
             </div>
         </div>
 
-        {{-- Description section --}}
         <div class="row mt-5">
             <div class="col-md-8">
                 <h5>Checkup Details</h5>
@@ -63,14 +58,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="orderModalLabel">Booking Form</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalCloseBtn"></button>
             </div>
             <div class="modal-body">
                 <form id="orderForm">
                     @csrf
                     <input type="hidden" name="paket_id" value="{{ $paket->id }}">
 
-                    {{-- Non-editable info --}}
                     <div class="mb-3">
                         <label class="form-label">Package Name</label>
                         <input type="text" class="form-control" value="{{ $paket->nama_paket }}" readonly>
@@ -88,14 +82,11 @@
 
                     <hr>
 
-                    {{-- User input --}}
                     <div class="mb-3">
                         <label for="tanggal_booking" class="form-label fw-bold">Select Booking Date</label>
                         <input type="date" class="form-control" id="tanggal_booking" name="tanggal_booking" required>
                         <div id="quotaInfo" class="form-text mt-2"></div>
                     </div>
-
-                    <input type="hidden" name="paket_id" value="{{ $paket->id }}">
 
                     <div class="mb-3">
                         <label for="booking_time" class="form-label fw-bold">Select Booking Time</label>
@@ -106,7 +97,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelBtn">Cancel</button>
                 <button type="button" class="btn btn-primary" id="submitOrder" disabled>Continue to Payment</button>
             </div>
         </div>
@@ -117,88 +108,89 @@
 <script type="text/javascript" src="{{ config('midtrans.snap_url') }}" data-client-key="{{ config('Mid-client-tsGJe31nWvY18Npe') }}"></script>
 @endsection
 
-{{-- ===================================================
-     JAVASCRIPT LOGIC
-====================================================== --}}
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
-        const paketId = $('input[name="paket_id"]').val();
-        const bookingDateInput = $('#tanggal_booking');
-        const quotaInfo = $('#quotaInfo');
-        const submitButton = $('#submitOrder');
-        let isSubmitting = false;
+$(document).ready(function () {
+    const bookingDateInput = $('#tanggal_booking');
+    const quotaInfo = $('#quotaInfo');
+    const submitButton = $('#submitOrder');
+    const orderForm = $('#orderForm');
+    let isSubmitting = false;
 
-        // Restrict booking date (D+1 to D+10)
-        const today = new Date();
-        const minDate = new Date(today.setDate(today.getDate() + 1));
-        const maxDate = new Date();
-        maxDate.setDate(minDate.getDate() + 9);
+    const today = new Date();
+    const minDate = new Date(today.setDate(today.getDate() + 1));
+    const maxDate = new Date();
+    maxDate.setDate(minDate.getDate() + 9);
 
-        const formatDate = (date) => date.toISOString().split('T')[0];
-        bookingDateInput.attr('min', formatDate(minDate));
-        bookingDateInput.attr('max', formatDate(maxDate));
+    const formatDate = (date) => date.toISOString().split('T')[0];
+    bookingDateInput.attr('min', formatDate(minDate));
+    bookingDateInput.attr('max', formatDate(maxDate));
 
-        bookingDateInput.on('change', function () {
-            const selectedDate = $(this).val();
-            quotaInfo.text('Checking availability...').removeClass('text-success text-danger');
-            submitButton.prop('disabled', true).text('Continue to Payment');
+    bookingDateInput.on('change', function () {
+        const selectedDate = $(this).val();
+        quotaInfo.text('Checking availability...').removeClass('text-success text-danger');
+        submitButton.prop('disabled', true).text('Continue to Payment');
 
-            if (!selectedDate) {
-                quotaInfo.text('Please select a booking date.');
-                return;
-            }
+        if (!selectedDate) return;
 
-            $.ajax({
-                url: `/api/paket/${paketId}/check-quota`,
-                type: 'POST',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({ tanggal: selectedDate }),
-                success: function (response) {
-                    if (response.available) {
-                        quotaInfo.text(`Quota available: ${response.sisa_kuota} slot(s).`).addClass('text-success');
-                        submitButton.prop('disabled', false);
-                    } else {
-                        quotaInfo.text('Fully booked. Please choose another date.').addClass('text-danger');
-                    }
-                },
-                error: function () {
-                    quotaInfo.text('Failed to check quota.').addClass('text-danger');
+        $.ajax({
+            url: `/api/paket/${$('input[name="paket_id"]').val()}/check-quota`,
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify({ tanggal: selectedDate }),
+            success: function (response) {
+                if (response.available) {
+                    quotaInfo.text(`Quota available: ${response.sisa_kuota} slot(s).`).addClass('text-success');
+                    submitButton.prop('disabled', false);
+                } else {
+                    quotaInfo.text('Fully booked. Please choose another date.').addClass('text-danger');
                 }
-            });
-        });
-
-        submitButton.on('click', function () {
-            if (isSubmitting) return;
-
-            isSubmitting = true;
-            submitButton.prop('disabled', true); // No text change
-
-            $.ajax({
-                url: '{{ route("api.order.create") }}',
-                type: 'POST',
-                data: $('#orderForm').serialize(),
-                success: function (response) {
-                    if (response.success) {
-                        window.location.href = response.redirect_url;
-                    } else {
-                        alert('An error occurred while placing your order.');
-                        resetButton();
-                    }
-                },
-                error: function (xhr) {
-                    alert('Error: ' + (xhr.responseJSON?.message || 'Please try again.'));
-                    resetButton();
-                }
-            });
-
-            function resetButton() {
-                isSubmitting = false;
-                submitButton.prop('disabled', false);
+            },
+            error: function () {
+                quotaInfo.text('Failed to check quota.').addClass('text-danger');
             }
         });
     });
+
+    submitButton.on('click', function () {
+        if (isSubmitting) return;
+
+        isSubmitting = true;
+        submitButton.prop('disabled', true).text('Processing...');
+
+        $.ajax({
+            url: '{{ route("api.order.create") }}',
+            type: 'POST',
+            data: orderForm.serialize(),
+            success: function (response) {
+                if (response.success) {
+                    window.location.href = response.redirect_url;
+                } else {
+                    alert('An error occurred while placing your order.');
+                    resetButton();
+                }
+            },
+            error: function (xhr) {
+                alert('Error: ' + (xhr.responseJSON?.message || 'Please try again.'));
+                resetButton();
+            }
+        });
+
+        function resetButton() {
+            isSubmitting = false;
+            submitButton.prop('disabled', false).text('Continue to Payment');
+        }
+    });
+
+    // Reset modal when closed (Cancel or X)
+    $('#orderModal').on('hidden.bs.modal', function () {
+        orderForm[0].reset();
+        quotaInfo.text('');
+        submitButton.prop('disabled', true).text('Continue to Payment');
+        isSubmitting = false;
+    });
+});
 </script>
 @endpush
