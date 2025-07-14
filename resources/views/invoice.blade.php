@@ -10,11 +10,11 @@
                         <h4 class="mb-0">Invoice: {{ $order->order_code }}</h4>
                         <small>Status:
                         @if($order->payment_status === 'paid')
-                        <span class="badge bg-success">PEMBAYARAN SUKSES</span>
+                        <span class="badge bg-success">PAYMENT SUCCESSFUL</span>
                         @elseif($order->payment_status === 'pending')
-                        <span class="badge bg-warning">MENUNGGU PEMBAYARAN</span>
+                        <span class="badge bg-warning">AWAITING PAYMENT</span>
                         @else
-                        <span class="badge bg-danger">BELUM BAYAR</span>
+                        <span class="badge bg-danger">NOT PAID</span>
                         @endif
                         </small>
                     </div>
@@ -24,34 +24,34 @@
                                 <h5>Order Details</h5>
                                 <table class="table table-borderless">
                                     <tr>
-                                        <td style="width: 160px;">Nama Paket</td>
+                                        <td style="width: 160px;">Package Name</td>
                                         <td>: {{ $order->paket->nama_paket }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Rumah Sakit</td>
+                                        <td>Hospital</td>
                                         <td>: {{ $order->paket->rumahSakit->nama ?? '-' }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Tanggal Booking</td>
+                                        <td>Booking Date</td>
                                         <td>: {{ \Carbon\Carbon::parse($order->booking_date)->format('d F Y') }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Jam Booking</td>
+                                        <td>Booking Time</td>
                                         <td>: {{ $order->booking_time ?? '08:00 WIB' }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Harga</td>
+                                        <td>Price</td>
                                         <td class="fw-bold text-success">: {{ number_format($order->total_price, 0, ',', '.') }}</td>
                                     </tr>
                                     @if($order->paid_at)
                                     <tr>
-                                        <td>Dibayar Pada</td>
+                                        <td>Paid At</td>
                                         <td>: {{ $order->paid_at->format('d F Y H:i') }}</td>
                                     </tr>
                                     @endif
                                     @if($order->payment_method)
                                     <tr>
-                                        <td>Metode Pembayaran</td>
+                                        <td>Payment Method</td>
                                         <td>: {{ ucfirst($order->payment_method) }}</td>
                                     </tr>
                                     @endif
@@ -59,7 +59,7 @@
                             </div>
                             <div class="col-md-6 text-center">
                                 <img src="{{ asset('storage/' . $order->paket->gambar) }}"
-                                    alt="Gambar Paket"
+                                    alt="Package Image"
                                     class="img-fluid rounded shadow-sm"
                                     style="width: 100%; height: 230px; object-fit: cover; border: 1px solid #ddd;">
                             </div>
@@ -69,20 +69,20 @@
 
                         @if ($order->payment_status !== 'paid')
                         <div class="text-center mb-3">
-                            <p class="text-muted">Klik tombol di bawah untuk melanjutkan ke pembayaran.</p>
+                            <p class="text-muted">Click the button below to proceed with the payment.</p>
                         </div>
                         <div class="d-grid mt-2">
-                            <button id="pay-button" class="btn btn-success btn-lg">Bayar Sekarang</button>
+                            <button id="pay-button" class="btn btn-success btn-lg">Pay Now</button>
                         </div>
                         @else
                         <div class="alert alert-success mt-4 text-center">
-                            ✅ Pesanan ini sudah dibayar pada 
+                            ✅ This order has been paid
                             @if($order->payment_method)
-                            <br><small>Metode: {{ ucfirst($order->payment_method) }}</small>
+                            <br><small>Method: {{ ucfirst($order->payment_method) }}</small>
                             @endif
                         </div>
                         <!-- <div class="text-center mt-3">
-                            <a href="{{ route('home') }}" class="btn btn-primary">Kembali ke Beranda</a>
+                            <a href="{{ route('home') }}" class="btn btn-primary">Back to Home</a>
                         </div> -->
                         @endif
                     </div>
@@ -106,19 +106,19 @@
                 if (isPaying) return;
                 isPaying = true;
                 payButton.disabled = true;
-                payButton.innerHTML = 'Memproses...';
+                payButton.innerHTML = 'Processing...';
 
-                // Tampilkan alert loading
+                // Show loading alert
                 Swal.fire({
-                    title: 'Meminta Sesi Pembayaran...',
-                    text: 'Mohon tunggu sebentar.',
+                    title: 'Requesting Payment Session...',
+                    text: 'Please wait a moment.',
                     allowOutsideClick: false,
                     didOpen: () => {
                         Swal.showLoading();
                     }
                 });
 
-                // Request AJAX ke backend untuk mendapatkan Snap Token
+                // AJAX request to backend for Snap Token
                 fetch('{{ route("invoice.pay", $order->id) }}', {
                         method: 'POST',
                         headers: {
@@ -128,18 +128,18 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        Swal.close(); // Tutup alert loading
+                        Swal.close(); // Close loading alert
 
                         if (data.error) {
                             throw new Error(data.error);
                         }
 
-                        // Gunakan token untuk membuka pop-up pembayaran Snap
+                        // Use token to open Snap payment popup
                         window.snap.pay(data.snap_token, {
                             onSuccess: function(result) {
                                 console.log('Payment success:', result);
 
-                                // Tunggu sebentar lalu check status
+                                // Wait then check status
                                 setTimeout(function() {
                                     checkPaymentStatus();
                                 }, 2000);
@@ -149,8 +149,8 @@
 
                                 Swal.fire({
                                     icon: 'info',
-                                    title: 'Pembayaran Tertunda',
-                                    text: 'Silakan selesaikan pembayaran Anda.',
+                                    title: 'Payment Pending',
+                                    text: 'Please complete your payment.',
                                 }).then(() => {
                                     setTimeout(function() {
                                         checkPaymentStatus();
@@ -162,8 +162,8 @@
 
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Pembayaran Gagal',
-                                    text: 'Terjadi kesalahan saat memproses pembayaran.',
+                                    title: 'Payment Failed',
+                                    text: 'An error occurred during the payment process.',
                                 });
                                 resetButton();
                             },
@@ -177,14 +177,14 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: error.message || 'Terjadi kesalahan. Silakan coba lagi.',
+                            text: error.message || 'An error occurred. Please try again.',
                         });
                         resetButton();
                     });
             });
         }
 
-        // Function untuk check status pembayaran
+        // Function to check payment status
         function checkPaymentStatus() {
             fetch('{{ route("invoice.status", $order->id) }}', {
                 method: 'GET',
@@ -197,15 +197,15 @@
                 if (data.payment_status === 'paid') {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Pembayaran Berhasil!',
-                        text: 'Terima kasih atas pembayaran Anda.',
+                        title: 'Payment Successful!',
+                        text: 'Thank you for your payment.',
                         showConfirmButton: true,
                         confirmButtonText: 'OK'
                     }).then(() => {
                         window.location.reload();
                     });
                 } else {
-                    // Jika belum paid, tunggu lagi
+                    // If not paid yet, retry check
                     setTimeout(checkPaymentStatus, 3000);
                 }
             })
@@ -218,7 +218,7 @@
         function resetButton() {
             isPaying = false;
             payButton.disabled = false;
-            payButton.innerHTML = 'Bayar Sekarang';
+            payButton.innerHTML = 'Pay Now';
         }
     });
 </script>
