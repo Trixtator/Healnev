@@ -325,7 +325,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 Route::post('/invoice/pay/{id}', [MidtransController::class, 'bayar'])->name('invoice.pay');
 // Route::post('/midtrans/notification', [MidtransController::class, 'notificationHandler']);
 
-Route::post('/midtrans/notification', [InvoiceController::class, 'handleNotification']);
+// Route::post('/midtrans/notification', [InvoiceController::class, 'handleNotification']);
 
 // Route::post('/midtrans/notification', [\App\Http\Controllers\InvoiceController::class, 'handleNotification']);
 // Route::post('api/midtrans/notification', [MidtransController::class, 'handleNotification']);

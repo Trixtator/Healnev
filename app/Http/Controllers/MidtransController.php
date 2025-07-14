@@ -53,6 +53,12 @@ class MidtransController extends Controller
 
    public function handleNotification(Request $request)
     {
+
+        Log::info('RAW BODY', ['raw' => $request->getContent()]);
+    Log::info('JSON BODY', ['json' => $request->json()->all()]);
+    Log::info('Request Headers', $request->headers->all());
+    
+    
         // Ambil raw input dari Midtrans
         $rawBody = $request->getContent();
         if (empty($rawBody)) {
