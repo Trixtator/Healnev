@@ -363,3 +363,6 @@ Route::get('/invoice/{id}/status', [InvoiceController::class, 'checkStatus'])->n
 
 // routes/web.php
 Auth::routes(['verify' => true]);
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
