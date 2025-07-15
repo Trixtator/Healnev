@@ -361,8 +361,8 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/invoice/{id}/status', [InvoiceController::class, 'checkStatus'])->name('invoice.status');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
-    ->name('home')
-    ->middleware(['auth', 'verified']);
+// routes/web.php
+Auth::routes(['verify' => true]);
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
