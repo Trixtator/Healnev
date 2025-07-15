@@ -27,6 +27,7 @@ use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\TestimoniController;
 use App\Http\Controllers\Admin\TestimoniController as AdminTestimoniController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
 
@@ -362,7 +363,33 @@ Route::middleware('auth')->group(function () {
 Route::get('/invoice/{id}/status', [InvoiceController::class, 'checkStatus'])->name('invoice.status');
 
 // routes/web.php
-Auth::routes(['verify' => true]);
+// Auth::routes(['verify' => true]);
+
+// --- GUNAKAN RUTE MANUAL INI ---
+
+// Rute Registrasi
+Route::get('register', [AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('register', [AuthController::class, 'register']);
+
+// Rute Login & Logout
+Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+
+// Rute untuk Verifikasi Email
+Route::get('/email/verify', function () {
+    return view('auth.verify');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.resend');
 
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

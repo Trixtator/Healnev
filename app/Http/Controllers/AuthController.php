@@ -111,4 +111,16 @@ class AuthController extends Controller
         // DIUBAH: Mengarahkan ke rute 'home' setelah logout
         return redirect()->route('home');
     }
+
+    public function showRegistrationForm()
+{
+    // Pastikan path view ini benar
+    return view('auth.register'); 
+}
+
+public function showLoginForm()
+{
+    // Pastikan path view ini benar
+    return view('auth.login');
+}
 }
