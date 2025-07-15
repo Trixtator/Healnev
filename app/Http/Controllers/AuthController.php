@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Registered;
 use App\Models\User;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
-use RealRashid\SweetAlert\Facades\Alert;
 
 class AuthController extends Controller
 {
@@ -19,20 +17,12 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-
-            // Cek apakah user sudah verifikasi email
-            if (!$user->hasVerifiedEmail()) {
-                Auth::logout();
-                Alert::error('Login Gagal', 'Akun Anda belum terverifikasi. Silakan cek email Anda untuk verifikasi.');
-                return redirect()->route('login');
-            }
-
+            // Jika login berhasil, arahkan ke dashboard admin. Ini sudah benar.
             return redirect()->route('admin.index');
         }
 
         return back()->withErrors([
-            'email' => 'Email atau password salah.',
+            'email' => 'The provided credentials do not match our records.',
         ]);
     }
 
@@ -51,12 +41,10 @@ class AuthController extends Controller
             'role' => 'user',
         ]);
 
-        // Trigger kirim email verifikasi
-        event(new Registered($user));
-
         Auth::login($user);
 
-        return redirect()->route('verification.notice');
+        // DIUBAH: Mengarahkan ke rute 'home' setelah registrasi berhasil
+        return redirect()->route('home');
     }
 
     public function resetPassword(Request $request)
@@ -106,6 +94,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+        // DIUBAH: Mengarahkan ke rute 'home' setelah logout
         return redirect()->route('home');
     }
 }

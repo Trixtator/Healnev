@@ -27,7 +27,7 @@ class McuRegistrationController extends Controller
         $mcuRegistration = McuRegistration::create($validatedData);
 
         // Tambahkan pesan sukses ke dalam sesi
-        $request->session()->flash('success', 'Pendaftaran berhasil!');
+        session()->flash('success', 'Pendaftaran berhasil!');
 
         // Redirect kembali ke halaman pendaftaran
         return redirect()->back();
