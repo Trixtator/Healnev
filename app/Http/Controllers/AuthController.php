@@ -48,13 +48,18 @@ class AuthController extends Controller
         'name' => $request->name,
         'email' => $request->email,
         'password' => Hash::make($request->password),
-        'role' => 'user', // <--- KEMBALIKAN BARIS INI
+        'role' => 'user',
     ]);
 
+    // Kirim email verifikasi TANPA login user
     event(new Registered($user));
+
+    // ✅ Jangan login di sini!
+    // Auth::login($user); ← HAPUS ATAU JANGAN DIPAKAI
 
     return redirect()->route('login')->with('status', 'Pendaftaran berhasil! Silakan periksa email Anda untuk verifikasi.');
 }
+
 
     public function resetPassword(Request $request)
     {
