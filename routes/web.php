@@ -383,21 +383,28 @@ Route::get('/email/verify', function () {
 })->middleware('auth')->name('verification.notice');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    // 1. Dapatkan pengguna berdasarkan ID dari URL
+
     $user = User::find($request->route('id'));
 
-    // 2. Jika pengguna belum login, login-kan mereka secara manual
+    // --- INI BAGIAN PENTING YANG DITAMBAHKAN ---
+    // Jika pengguna dengan ID dari URL tidak ditemukan, hentikan proses.
+    if (!$user) {
+        abort(404, 'User not found.'); // Tampilkan halaman 404 Not Found
+    }
+    // --- SELESAI ---
+
+    // Jika pengguna belum login, login-kan mereka
     if (!Auth::check()) {
         Auth::login($user);
     }
 
-    // 3. Jalankan proses verifikasi
+    // Jalankan proses verifikasi
     $request->fulfill();
 
-    // 4. Arahkan ke halaman home dengan pesan sukses
+    // Arahkan ke halaman home
     return redirect('/home')->with('status', 'Email berhasil diverifikasi!');
 
-})->middleware(['signed'])->name('verification.verify'); 
+})->middleware(['signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
