@@ -5,60 +5,59 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 use App\Models\User;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Auth\Events\Registered;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
-{
-    $credentials = $request->only('email', 'password');
+    {
+        $credentials = $request->only('email', 'password');
 
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
 
-        // Cek apakah sudah verifikasi email
-        if (!$user->hasVerifiedEmail()) {
-            Auth::logout();
-            Alert::error('Login Gagal', 'Akun Anda belum terverifikasi. Silakan cek email Anda.');
-            return redirect()->route('login');
+            // Cek apakah user sudah verifikasi email
+            if (!$user->hasVerifiedEmail()) {
+                Auth::logout();
+                Alert::error('Login Gagal', 'Akun Anda belum terverifikasi. Silakan cek email Anda untuk verifikasi.');
+                return redirect()->route('login');
+            }
+
+            return redirect()->route('admin.index');
         }
 
-        return redirect()->route('admin.index');
+        return back()->withErrors([
+            'email' => 'Email atau password salah.',
+        ]);
     }
 
-    return back()->withErrors([
-        'email' => 'Email atau password salah.',
-    ]);
-}
-
     public function register(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users',
-        'password' => 'required|string|min:8|confirmed',
-    ]);
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
 
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'role' => 'user',
-    ]);
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'user',
+        ]);
 
-    // Kirim email verifikasi
-    event(new Registered($user));
+        // Trigger kirim email verifikasi
+        event(new Registered($user));
 
-    Auth::login($user);
+        Auth::login($user);
 
-    // Redirect ke halaman "verifikasi email"
-    return redirect()->route('verification.notice');
-}
+        return redirect()->route('verification.notice');
+    }
 
     public function resetPassword(Request $request)
     {
@@ -107,7 +106,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // DIUBAH: Mengarahkan ke rute 'home' setelah logout
         return redirect()->route('home');
     }
 }
