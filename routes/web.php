@@ -382,8 +382,12 @@ Route::get('/email/verify', function () {
 })->middleware('auth')->name('verification.notice');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    // Baris inilah yang melakukan "sihir"-nya
     $request->fulfill();
-    return redirect('/home');
+
+    // Arahkan pengguna ke halaman yang Anda inginkan setelah berhasil verifikasi
+    return redirect('/home')->with('verified', true);
+
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
