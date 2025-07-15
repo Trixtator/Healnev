@@ -640,17 +640,9 @@
 @endsection
 
 @section('scripts')
-{{-- 1. MEMUAT SEMUA LIBRARY YANG DIPERLUKAN --}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
+{{-- Script untuk toggle password, dll. tidak perlu diubah --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        
-        /* 2. Fungsionalitas Halaman (Asli dari file Anda) */
-
-        // Inisialisasi animasi scroll (AOS)
         if (typeof AOS !== 'undefined') {
             AOS.init({
                 duration: 800,
@@ -659,7 +651,6 @@
             });
         }
 
-        // Fungsi untuk lihat/sembunyikan password
         window.togglePassword = function(inputId) {
             const input = document.getElementById(inputId);
             const toggle = input.parentElement.querySelector('.password-toggle');
@@ -676,7 +667,6 @@
             }
         };
 
-        // Efek loading pada tombol submit
         const form = document.querySelector('.auth-form');
         const submitBtn = document.querySelector('.btn-submit');
         if (form && submitBtn) {
@@ -685,30 +675,10 @@
                 submitBtn.disabled = true;
             });
         }
-
-        /* 3. Notifikasi Pop-up (SweetAlert) */
-        
-        // Untuk notifikasi "Akun belum diverifikasi"
-        @if (session('unverified'))
-            Swal.fire({
-                icon: 'warning',
-                title: 'Verifikasi Diperlukan',
-                text: "{{ session('unverified') }}",
-                confirmButtonColor: '#3498db',
-                confirmButtonText: 'OK'
-            });
-        @endif
-
-        // Untuk notifikasi "Pendaftaran berhasil" atau status lainnya
-        @if (session('status'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: "{{ session('status') }}",
-                confirmButtonColor: '#3498db',
-                confirmButtonText: 'OK'
-            });
-        @endif
     });
 </script>
+
+{{-- Pastikan library AOS (Animate on Scroll) dimuat --}}
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 @endsection
