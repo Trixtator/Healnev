@@ -25,3 +25,4 @@ Route::post('/paket/{paket}/check-quota', [OrderController::class, 'checkQuota']
 // Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification']);
 Route::get('/midtrans/finish', [MidtransController::class, 'finish']);
 Route::post('midtrans/notification', [MidtransController::class, 'handleNotification']);
+// Route::post('/midtrans/notification', [MidtransController::class, 'notification']);

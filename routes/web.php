@@ -26,6 +26,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\TestimoniController;
 use App\Http\Controllers\Admin\TestimoniController as AdminTestimoniController;
+use Illuminate\Support\Facades\Auth;
 
 
 
@@ -241,7 +242,7 @@ Route::post('/paket', [PaketController::class, 'store'])->name('paket.store');
 Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update')->middleware('auth');
 Route::put('/profile/email', [ProfileController::class, 'updateEmail'])->name('profile.email.update')->middleware('auth');
 
-Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Rute untuk Homepage (sudah ada)
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -359,3 +360,5 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/invoice/{id}/status', [InvoiceController::class, 'checkStatus'])->name('invoice.status');
+
+Auth::routes(['verify' => true]);
