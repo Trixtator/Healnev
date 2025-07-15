@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
+// 1. Import both the contract and the trait
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens; // Assuming you use Sanctum
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail
+// 2. Implement the contract
+class User extends Authenticatable implements MustVerifyEmailContract
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    // 3. Use the trait
+    use HasApiTokens, HasFactory, Notifiable, MustVerifyEmail;
 
     /**
      * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
      */
     protected $fillable = [
         'name',
@@ -25,13 +27,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'address',
         'birth_date',
         'phone',
-        'profile_picture', // This is correctly added
+        'profile_picture',
+        'role',
     ];
 
     /**
      * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -40,12 +41,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * The attributes that should be cast.
-     *
-     * @var array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed', // For Laravel 9+
+        'password' => 'hashed',
         'birth_date' => 'date',
     ];
 
