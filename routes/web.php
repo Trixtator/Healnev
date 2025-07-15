@@ -27,6 +27,7 @@ use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\TestimoniController;
 use App\Http\Controllers\Admin\TestimoniController as AdminTestimoniController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
 
@@ -361,8 +362,26 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/invoice/{id}/status', [InvoiceController::class, 'checkStatus'])->name('invoice.status');
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+});
+
 // routes/web.php
 Auth::routes(['verify' => true]);
+
+Route::get('/email/verify', function () {
+    return view('auth.verify');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill(); // Verifies the user
+    return redirect('/admin'); // Redirect after verified
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('resent', true);
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
