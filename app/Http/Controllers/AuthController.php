@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Auth\Events\Registered; // Pastikan ini ada
 
 class AuthController extends Controller
 {
@@ -17,7 +18,17 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            // Jika login berhasil, arahkan ke dashboard admin. Ini sudah benar.
+            $user = Auth::user();
+
+            // ✅ PERIKSA APAKAH EMAIL SUDAH DIVERIFIKASI
+            if (!$user->hasVerifiedEmail()) {
+                Auth::logout(); // Logout pengguna jika belum
+                // Redirect kembali dengan pesan untuk SweetAlert
+                return back()->with('unverified', 'Akun Anda belum terverifikasi. Silakan periksa email Anda.');
+            }
+
+            // Jika login berhasil dan terverifikasi, arahkan ke dashboard
+            $request->session()->regenerate();
             return redirect()->route('admin.index');
         }
 
@@ -28,23 +39,26 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        // Validasi bisa Anda tambahkan sesuai kebutuhan untuk kolom lain
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
+        // ❗️ SESUAIKAN BAGIAN INI
+        // Hapus 'role' karena tidak ada di model baru Anda
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'user',
         ]);
 
-        Auth::login($user);
+        // Kirim event untuk notifikasi verifikasi email
+        event(new Registered($user));
 
-        // DIUBAH: Mengarahkan ke rute 'home' setelah registrasi berhasil
-        return redirect()->route('home');
+        // Arahkan ke halaman login dengan pesan sukses
+        return redirect()->route('login')->with('status', 'Pendaftaran berhasil! Silakan periksa email Anda untuk verifikasi.');
     }
 
     public function resetPassword(Request $request)

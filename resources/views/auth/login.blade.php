@@ -640,6 +640,42 @@
 @endsection
 
 @section('scripts')
+{{-- CDN SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ... (kode lain seperti AOS, togglePassword)
+
+        // ✅ SCRIPT UNTUK MENANGKAP FLASH SESSION
+        @if (session('unverified'))
+            Swal.fire({
+                icon: 'warning',
+                title: 'Verifikasi Diperlukan',
+                text: "{{ session('unverified') }}",
+                confirmButtonColor: '#3498db',
+                confirmButtonText: 'OK'
+            });
+        @endif
+
+        @if (session('status'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('status') }}",
+                confirmButtonColor: '#3498db',
+                confirmButtonText: 'OK'
+            });
+        @endif
+    });
+</script>
+
+{{-- Pastikan library AOS dimuat --}}
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+@endsection
+
+@section('scripts')
 {{-- Script untuk toggle password, dll. tidak perlu diubah --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
