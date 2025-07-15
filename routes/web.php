@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\User; // <-- TAMBAHKAN INI DI ATAS
 // use App\Http\Controllers\DepartController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
@@ -382,13 +383,21 @@ Route::get('/email/verify', function () {
 })->middleware('auth')->name('verification.notice');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    // Baris inilah yang melakukan "sihir"-nya
+    // 1. Dapatkan pengguna berdasarkan ID dari URL
+    $user = User::find($request->route('id'));
+
+    // 2. Jika pengguna belum login, login-kan mereka secara manual
+    if (!Auth::check()) {
+        Auth::login($user);
+    }
+
+    // 3. Jalankan proses verifikasi
     $request->fulfill();
 
-    // Arahkan pengguna ke halaman yang Anda inginkan setelah berhasil verifikasi
-    return redirect('/home')->with('verified', true);
+    // 4. Arahkan ke halaman home dengan pesan sukses
+    return redirect('/home')->with('status', 'Email berhasil diverifikasi!');
 
-})->middleware(['auth', 'signed'])->name('verification.verify');
+})->middleware(['signed'])->name('verification.verify'); 
 
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
