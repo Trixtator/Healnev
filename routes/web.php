@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Models\User; // <-- TAMBAHKAN INI DI ATAS
 // use App\Http\Controllers\DepartController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
@@ -28,7 +27,6 @@ use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\TestimoniController;
 use App\Http\Controllers\Admin\TestimoniController as AdminTestimoniController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
 
@@ -364,52 +362,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/invoice/{id}/status', [InvoiceController::class, 'checkStatus'])->name('invoice.status');
 
 // routes/web.php
-// Auth::routes(['verify' => true]);
-
-// --- GUNAKAN RUTE MANUAL INI ---
-
-// Rute Registrasi
-Route::get('register', [AuthController::class, 'showRegistrationForm'])->name('register');
-Route::post('register', [AuthController::class, 'register']);
-
-// Rute Login & Logout
-Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-
-// Rute untuk Verifikasi Email
-Route::get('/email/verify', function () {
-    return view('auth.verify');
-})->middleware('auth')->name('verification.notice');
-
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-
-    $user = User::find($request->route('id'));
-
-    // --- INI BAGIAN PENTING YANG DITAMBAHKAN ---
-    // Jika pengguna dengan ID dari URL tidak ditemukan, hentikan proses.
-    if (!$user) {
-        abort(404, 'User not found.'); // Tampilkan halaman 404 Not Found
-    }
-    // --- SELESAI ---
-
-    // Jika pengguna belum login, login-kan mereka
-    if (!Auth::check()) {
-        Auth::login($user);
-    }
-
-    // Jalankan proses verifikasi
-    $request->fulfill();
-
-    // Arahkan ke halaman home
-    return redirect('/home')->with('status', 'Email berhasil diverifikasi!');
-
-})->middleware(['signed'])->name('verification.verify');
-
-Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
-    return back()->with('message', 'Verification link sent!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.resend');
+Auth::routes(['verify' => true]);
 
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
