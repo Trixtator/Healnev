@@ -48,12 +48,16 @@ class AuthController extends Controller
         'name' => $request->name,
         'email' => $request->email,
         'password' => Hash::make($request->password),
-        'role' => 'user', // <--- KEMBALIKAN BARIS INI
+        'role' => 'user', // Sesuaikan jika perlu
     ]);
 
     event(new Registered($user));
 
-    return redirect()->route('login')->with('status', 'Pendaftaran berhasil! Silakan periksa email Anda untuk verifikasi.');
+    // 1. KEMBALIKAN BARIS INI untuk me-login-kan pengguna secara otomatis
+    Auth::login($user); 
+
+    // 2. UBAH ARAH REDIRECT ke halaman 'home' atau dashboard
+    return redirect()->route('home'); 
 }
 
     public function resetPassword(Request $request)
