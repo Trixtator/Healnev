@@ -26,7 +26,6 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\TestimoniController;
 use App\Http\Controllers\Admin\TestimoniController as AdminTestimoniController;
-use Illuminate\Support\Facades\Auth;
 
 
 
@@ -360,9 +359,3 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/invoice/{id}/status', [InvoiceController::class, 'checkStatus'])->name('invoice.status');
-
-// routes/web.php
-Auth::routes(['verify' => true]);
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
