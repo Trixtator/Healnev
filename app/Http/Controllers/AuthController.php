@@ -14,28 +14,34 @@ use Illuminate\Auth\Events\Registered; // Pastikan ini ada
 class AuthController extends Controller
 {
     public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
+{
+    $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
 
-            // ✅ PERIKSA APAKAH EMAIL SUDAH DIVERIFIKASI
-            if (!$user->hasVerifiedEmail()) {
-                Auth::logout(); // Logout pengguna jika belum
-                // Redirect kembali dengan pesan untuk SweetAlert
-                return back()->with('unverified', 'Akun Anda belum terverifikasi. Silakan periksa email Anda.');
-            }
+        // ✅ PERIKSA APAKAH EMAIL SUDAH DIVERIFIKASI
+        if (!$user->hasVerifiedEmail()) {
+            Auth::logout(); // Logout pengguna jika belum
+            return back()->with('unverified', 'Akun Anda belum terverifikasi. Silakan periksa email Anda.');
+        }
 
-            // Jika login berhasil dan terverifikasi, arahkan ke dashboard
-            $request->session()->regenerate();
+        // ✅ REGENERASI SESI
+        $request->session()->regenerate();
+
+        // ✅ REDIRECT BERDASARKAN ROLE
+        if ($user->role === 'admin') {
             return redirect()->route('admin.index');
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        return redirect()->route('home'); // Atau route user biasa
     }
+
+    return back()->withErrors([
+        'email' => 'Email atau password salah.',
+    ]);
+}
+
     public function register(Request $request)
 {
     $request->validate([
