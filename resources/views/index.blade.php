@@ -20,7 +20,7 @@
                         <span class="badge-icon">
                             <i class="fas fa-heart-pulse"></i>
                         </span>
-                        <span class="badge-text">Trusted Medical Tourism Partner</span>
+                        <span class="badge-text">Trusted Medical Tourism Farhan</span>
                     </div>
 
                     <!-- Animated Title -->
