@@ -27,7 +27,7 @@
                     <h1 class="hero-title mb-4">
                         <span class="title-line" data-aos="fade-up" data-aos-delay="200">Transform Your</span>
                         <span class="title-line gradient-text" data-aos="fade-up" data-aos-delay="400">Health Journey</span>
-                        <span class="title-line" data-aos="fade-up" data-aos-delay="600">in Paradishyhbgbgujve</span>
+                        <span class="title-line" data-aos="fade-up" data-aos-delay="600">in</span>
                     </h1>
 
                     <!-- Enhanced Description -->
